@@ -1,0 +1,42 @@
+[
+  {
+    "category": "trailer",
+    "nightly": 45,
+    "weekly": 280,
+    "monthly": 1000,
+    "fourMonth": 3600,
+    "cleaningFee": 40
+  },
+  {
+    "category": "cottage-1br",
+    "nightly": 65,
+    "weekly": 420,
+    "monthly": 1500,
+    "fourMonth": 5400,
+    "cleaningFee": 40
+  },
+  {
+    "category": "cottage-2br",
+    "nightly": 85,
+    "weekly": 560,
+    "monthly": 2000,
+    "fourMonth": 7200,
+    "cleaningFee": 40
+  },
+  {
+    "category": "cottage-2br-premium",
+    "nightly": 105,
+    "weekly": 700,
+    "monthly": 2500,
+    "fourMonth": 9000,
+    "cleaningFee": 40
+  },
+  {
+    "category": "rv-site",
+    "nightly": 45,
+    "weekly": 280,
+    "monthly": 1000,
+    "fourMonth": 3600,
+    "cleaningFee": 0
+  }
+]

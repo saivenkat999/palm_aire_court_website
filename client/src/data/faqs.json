@@ -1,0 +1,62 @@
+[
+  {
+    "id": "check-in-out",
+    "question": "What are the check-in and check-out times?",
+    "answer": "Check-in is 3:00 PM and check-out is 11:00 AM. Early check-in or late check-out may be available upon request, subject to availability.",
+    "category": "general"
+  },
+  {
+    "id": "wifi",
+    "question": "Is Wi-Fi included?",
+    "answer": "Yes, complimentary Wi-Fi is provided in all units and common areas throughout Palm Aire Court.",
+    "category": "amenities"
+  },
+  {
+    "id": "parking",
+    "question": "Is parking available?",
+    "answer": "Yes, each unit includes a dedicated parking space. Additional parking may be available for guests with multiple vehicles.",
+    "category": "general"
+  },
+  {
+    "id": "pets",
+    "question": "Are pets allowed?",
+    "answer": "No, Palm Aire Court maintains a no-pets policy to ensure a comfortable environment for all guests, including those with allergies.",
+    "category": "policies"
+  },
+  {
+    "id": "long-stays",
+    "question": "Do you offer discounts for longer stays?",
+    "answer": "Yes, we offer attractive discounts for weekly, monthly, and four-month stays. Seasonal discounts are also available during certain times of the year.",
+    "category": "rates"
+  },
+  {
+    "id": "contact-emergency",
+    "question": "How do I contact management after hours?",
+    "answer": "For emergencies, call our main number at 480-993-8431. For non-emergency issues, you can email us at palmairecourt@outlook.com and we'll respond the next business day.",
+    "category": "contact"
+  },
+  {
+    "id": "activities",
+    "question": "What community activities are available?",
+    "answer": "We offer daily coffee time at 9:30 AM, weekly movie nights, hymn sings, puzzle and game sessions, and regular fellowship meals. Check with the office for the current activity schedule.",
+    "category": "community"
+  },
+  {
+    "id": "laundry",
+    "question": "Are laundry facilities available?",
+    "answer": "Yes, we have on-site coin-operated washers and dryers available for all guests. Some premium units may also include in-unit laundry facilities.",
+    "category": "amenities"
+  },
+  {
+    "id": "rv-size",
+    "question": "What size RVs can you accommodate?",
+    "answer": "Our RV sites can accommodate recreational vehicles up to 45 feet in length. All sites include full hookups with 50-amp electrical service.",
+    "category": "rv-sites"
+  },
+  {
+    "id": "cancellation",
+    "question": "What is your cancellation policy?",
+    "answer": "Cancellations made 7 days or more before check-in receive a full refund minus a processing fee. Cancellations within 7 days are subject to a one-night charge. Please see our Terms & Conditions for complete details.",
+    "category": "policies"
+  }
+]

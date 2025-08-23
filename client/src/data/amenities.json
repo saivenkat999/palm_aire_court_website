@@ -1,0 +1,128 @@
+[
+  {
+    "id": "wifi",
+    "name": "Wi-Fi Internet",
+    "description": "Complimentary high-speed wireless internet throughout the property",
+    "icon": "wifi",
+    "category": "community"
+  },
+  {
+    "id": "mail-delivery",
+    "name": "USPS Mail Delivery",
+    "description": "Daily mail delivery service to your unit",
+    "icon": "mail",
+    "category": "community"
+  },
+  {
+    "id": "pavilion-bbq",
+    "name": "Pavilion with BBQ & Smoker",
+    "description": "Covered pavilion featuring BBQ grills, smoker, and Blackstone griddle",
+    "icon": "chef-hat",
+    "category": "community"
+  },
+  {
+    "id": "ro-water",
+    "name": "Reverse Osmosis Water",
+    "description": "Clean, purified water system throughout the property",
+    "icon": "droplets",
+    "category": "community"
+  },
+  {
+    "id": "shuffleboard",
+    "name": "Shuffleboard Court",
+    "description": "Professional shuffleboard court for recreation",
+    "icon": "target",
+    "category": "community"
+  },
+  {
+    "id": "community-activities",
+    "name": "Community Activities",
+    "description": "Daily coffee time, movie nights, hymn sings, and fellowship meals",
+    "icon": "users",
+    "category": "community"
+  },
+  {
+    "id": "laundry",
+    "name": "Laundry Facilities",
+    "description": "On-site coin-operated washers and dryers",
+    "icon": "shirt",
+    "category": "community"
+  },
+  {
+    "id": "parking",
+    "name": "Parking",
+    "description": "Dedicated parking space for each unit",
+    "icon": "car",
+    "category": "unit"
+  },
+  {
+    "id": "cable-tv",
+    "name": "Cable Television",
+    "description": "Basic cable TV service included",
+    "icon": "tv",
+    "category": "unit"
+  },
+  {
+    "id": "ac-heat",
+    "name": "Air Conditioning & Heat",
+    "description": "Climate control for year-round comfort",
+    "icon": "thermometer",
+    "category": "unit"
+  },
+  {
+    "id": "full-kitchen",
+    "name": "Full Kitchen",
+    "description": "Complete kitchen with refrigerator, stove, microwave, and cookware",
+    "icon": "utensils",
+    "category": "unit"
+  },
+  {
+    "id": "kitchenette",
+    "name": "Kitchenette",
+    "description": "Compact kitchen area with basic cooking facilities",
+    "icon": "coffee",
+    "category": "unit"
+  },
+  {
+    "id": "patio",
+    "name": "Private Patio",
+    "description": "Outdoor space with seating area",
+    "icon": "sun",
+    "category": "unit"
+  },
+  {
+    "id": "mountain-view",
+    "name": "Mountain View",
+    "description": "Scenic views of the surrounding desert mountains",
+    "icon": "mountain",
+    "category": "unit"
+  },
+  {
+    "id": "full-hookups",
+    "name": "Full RV Hookups",
+    "description": "Complete utility connections for recreational vehicles",
+    "icon": "plug",
+    "category": "unit"
+  },
+  {
+    "id": "50-amp-electric",
+    "name": "50 Amp Electrical",
+    "description": "High-capacity electrical service for large RVs",
+    "icon": "zap",
+    "category": "unit"
+  },
+  {
+    "id": "water-sewer",
+    "name": "Water & Sewer",
+    "description": "Direct water and sewer connections",
+    "icon": "droplets",
+    "category": "unit"
+  },
+  {
+    "id": "concrete-pad",
+    "name": "Concrete Pad",
+    "description": "Level concrete surface for RV parking",
+    "icon": "square",
+    "category": "unit"
+  }
+]

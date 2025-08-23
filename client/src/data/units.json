@@ -1,0 +1,232 @@
+[
+  {
+    "id": "essex",
+    "slug": "essex",
+    "name": "Essex Cottage",
+    "type": "cottage-2br",
+    "capacity": 4,
+    "beds": 2,
+    "baths": 1,
+    "description": "The Essex Cottage offers comfortable accommodations with two bedrooms, a full kitchen, and a spacious living area. Perfect for couples or small families seeking a peaceful desert retreat with modern amenities and community access.",
+    "images": [
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Essex+Cottage+Living+Area",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Essex+Cottage+Master+Bedroom",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Essex+Cottage+Kitchen",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Essex+Cottage+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "full-kitchen",
+      "ro-water",
+      "laundry-nearby",
+      "patio"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 4 guests"
+    ],
+    "rateCategory": "cottage-2br"
+  },
+  {
+    "id": "view",
+    "slug": "view",
+    "name": "Mountain View",
+    "type": "cottage-1br",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "Mountain View offers a cozy one-bedroom retreat with stunning desert vistas. This unit features a comfortable living space, full kitchen, and private patio overlooking the beautiful Arizona landscape.",
+    "images": [
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Mountain+View+Living+Room",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Mountain+View+Bedroom",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Mountain+View+Kitchen",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Mountain+View+Patio"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "full-kitchen",
+      "ro-water",
+      "mountain-view",
+      "patio"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "cottage-1br"
+  },
+  {
+    "id": "9606-2br",
+    "slug": "9606-2br",
+    "name": "Desert Rose Cottage",
+    "type": "cottage-2br",
+    "capacity": 4,
+    "beds": 2,
+    "baths": 1,
+    "description": "Desert Rose Cottage provides spacious two-bedroom accommodations with southwestern charm. Features include a modern kitchen, comfortable living area, and easy access to community amenities.",
+    "images": [
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Desert+Rose+Living+Area",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Desert+Rose+Master+Bedroom",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Desert+Rose+Second+Bedroom",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Desert+Rose+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "full-kitchen",
+      "ro-water",
+      "patio",
+      "storage"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 4 guests"
+    ],
+    "rateCategory": "cottage-2br"
+  },
+  {
+    "id": "9608-1br",
+    "slug": "9608-1br",
+    "name": "Cactus Bloom Cottage",
+    "type": "cottage-1br",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "Cactus Bloom Cottage is a charming one-bedroom unit perfect for couples. This well-appointed space includes all modern conveniences while maintaining the warm, welcoming atmosphere Palm Aire Court is known for.",
+    "images": [
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Cactus+Bloom+Living+Space",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Cactus+Bloom+Bedroom",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Cactus+Bloom+Kitchen",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Cactus+Bloom+Entrance"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "full-kitchen",
+      "ro-water",
+      "patio"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "cottage-1br"
+  },
+  {
+    "id": "9618-2br",
+    "slug": "9618-2br",
+    "name": "Sunset Vista Cottage",
+    "type": "cottage-2br",
+    "capacity": 6,
+    "beds": 2,
+    "baths": 2,
+    "description": "Sunset Vista Cottage offers premium two-bedroom, two-bathroom accommodations with enhanced features. This larger unit includes additional space and amenities for extended stays and larger groups.",
+    "images": [
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Sunset+Vista+Great+Room",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Sunset+Vista+Master+Suite",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Sunset+Vista+Second+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Sunset+Vista+Kitchen"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "full-kitchen",
+      "ro-water",
+      "patio",
+      "storage",
+      "two-bathrooms",
+      "washer-dryer"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 6 guests"
+    ],
+    "rateCategory": "cottage-2br-premium"
+  },
+  {
+    "id": "trailer-example",
+    "slug": "trailer-example",
+    "name": "Desert Breeze Trailer",
+    "type": "trailer",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "Desert Breeze Trailer provides comfortable, affordable accommodations for budget-conscious travelers. This well-maintained unit includes essential amenities and access to all community facilities.",
+    "images": [
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Desert+Breeze+Interior",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Desert+Breeze+Sleeping+Area",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Desert+Breeze+Kitchenette",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Desert+Breeze+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "kitchenette",
+      "ro-water"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "trailer"
+  },
+  {
+    "id": "rv-site-example",
+    "slug": "rv-site-example",
+    "name": "Premium RV Site",
+    "type": "rv-site",
+    "capacity": 8,
+    "beds": 0,
+    "baths": 0,
+    "description": "Premium RV Site offers full hookups for your recreational vehicle. This spacious site includes 50-amp electrical service, water, sewer, and cable TV connections on a concrete pad with desert landscaping.",
+    "images": [
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Premium+RV+Site+Overview",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=RV+Site+Hookups",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=RV+Site+Landscaping",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=RV+Site+Utilities"
+    ],
+    "amenities": [
+      "full-hookups",
+      "50-amp-electric",
+      "water-sewer",
+      "cable-tv",
+      "wifi",
+      "concrete-pad",
+      "picnic-table",
+      "fire-ring"
+    ],
+    "policies": [
+      "RV length up to 45 feet",
+      "No permanent structures",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 8 guests"
+    ],
+    "rateCategory": "rv-site"
+  }
+]

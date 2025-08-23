@@ -1,0 +1,64 @@
+[
+  {
+    "unitId": "essex",
+    "bookedRanges": [
+      {
+        "start": "2024-09-15",
+        "end": "2024-09-22"
+      },
+      {
+        "start": "2024-10-05",
+        "end": "2024-10-12"
+      }
+    ]
+  },
+  {
+    "unitId": "view",
+    "bookedRanges": [
+      {
+        "start": "2024-09-20",
+        "end": "2024-09-25"
+      }
+    ]
+  },
+  {
+    "unitId": "9606-2br",
+    "bookedRanges": [
+      {
+        "start": "2024-10-01",
+        "end": "2024-10-15"
+      }
+    ]
+  },
+  {
+    "unitId": "9608-1br",
+    "bookedRanges": [
+      {
+        "start": "2024-09-18",
+        "end": "2024-09-30"
+      }
+    ]
+  },
+  {
+    "unitId": "9618-2br",
+    "bookedRanges": []
+  },
+  {
+    "unitId": "trailer-example",
+    "bookedRanges": [
+      {
+        "start": "2024-09-25",
+        "end": "2024-10-02"
+      }
+    ]
+  },
+  {
+    "unitId": "rv-site-example",
+    "bookedRanges": [
+      {
+        "start": "2024-10-10",
+        "end": "2024-10-20"
+      }
+    ]
+  }
+]

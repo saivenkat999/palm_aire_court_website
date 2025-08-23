@@ -1,16 +1,15 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { getRateDisplay } from "@/lib/pricing";
-import type { Unit, Rate } from "@/types";
+import { Unit } from "@/hooks/use-api";
 
 interface UnitCardProps {
   unit: Unit;
-  rate?: Rate;
 }
 
-export default function UnitCard({ unit, rate }: UnitCardProps) {
-  const formatUnitType = (type: string) => {
+export default function UnitCard({ unit }: UnitCardProps) {
+  const formatUnitType = (type?: string) => {
+    if (!type) return '';
     return type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
@@ -18,7 +17,7 @@ export default function UnitCard({ unit, rate }: UnitCardProps) {
     if (unit.type === 'rv-site') {
       return 'Full Hookup';
     }
-    return `Sleeps ${unit.capacity} • ${unit.beds} bed${unit.beds !== 1 ? 's' : ''} • ${unit.baths} bath${unit.baths !== 1 ? 's' : ''}`;
+    return `Sleeps ${unit.capacity} • ${unit.beds || 0} bed${unit.beds !== 1 ? 's' : ''} • ${unit.baths || 0} bath${unit.baths !== 1 ? 's' : ''}`;
   };
 
   return (
@@ -27,7 +26,7 @@ export default function UnitCard({ unit, rate }: UnitCardProps) {
       data-testid={`unit-card-${unit.slug}`}
     >
       <img
-        src={unit.images[0]}
+        src={unit.photos?.[0] || '/placeholder-unit.jpg'}
         alt={`${unit.name} exterior view`}
         className="w-full h-48 object-cover"
       />
@@ -48,7 +47,7 @@ export default function UnitCard({ unit, rate }: UnitCardProps) {
         
         <div className="flex justify-between items-center">
           <span className="font-bold text-primary" data-testid={`unit-price-${unit.slug}`}>
-            From {rate ? getRateDisplay(rate) : '$--'}/night
+            From $45/night
           </span>
           <Link href={`/stays/${unit.slug}`}>
             <Button 

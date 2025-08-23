@@ -6,8 +6,7 @@ import Gallery from '@/components/gallery';
 import BookingCard from '@/components/booking-card';
 import AmenitiesList from '@/components/amenities-list';
 import FAQ from '@/components/faq';
-import unitsData from '@/data/units.json';
-import ratesData from '@/data/rates.json';
+import { useUnit } from '@/hooks/use-api';
 import { Link } from 'wouter';
 import type { Unit, Rate } from '@/types';
 
@@ -16,11 +15,28 @@ export default function UnitDetail() {
   const [, setLocation] = useLocation();
   const slug = params.slug;
 
-  const units = unitsData as Unit[];
-  const rates = ratesData as Rate[];
-  
-  const unit = units.find(u => u.slug === slug);
-  const rate = unit ? rates.find(r => r.category === unit.rateCategory) : undefined;
+  const { data: unit, isLoading, error } = useUnit(slug || '');
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" data-testid="unit-error">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Error loading unit</h1>
+          <Link href="/stays">
+            <Button>Back to Stays</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (!unit) {
     return (
@@ -35,18 +51,6 @@ export default function UnitDetail() {
     );
   }
 
-  if (!rate) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" data-testid="rate-not-found">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Rate information unavailable</h1>
-          <Link href="/stays">
-            <Button>Back to Stays</Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   const formatUnitType = (type: string) => {
     return type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -72,7 +76,7 @@ export default function UnitDetail() {
           <div className="lg:col-span-2">
             {/* Gallery */}
             <Gallery
-              images={unit.images}
+              images={unit.photos}
               alt={unit.name}
               className="grid-cols-2 mb-8"
             />
@@ -85,17 +89,17 @@ export default function UnitDetail() {
                     {unit.name}
                   </h1>
                   <p className="text-lg text-muted-foreground" data-testid="unit-type">
-                    {formatUnitType(unit.type)}
+                    {formatUnitType(unit.type || '')}
                   </p>
                 </div>
               </div>
 
               <div className="flex flex-wrap items-center gap-4 mb-6">
                 <Badge variant="outline" data-testid="unit-beds">
-                  {unit.beds} Bedroom{unit.beds !== 1 ? 's' : ''}
+                  {unit.beds || 0} Bedroom{unit.beds !== 1 ? 's' : ''}
                 </Badge>
                 <Badge variant="outline" data-testid="unit-baths">
-                  {unit.baths} Bathroom{unit.baths !== 1 ? 's' : ''}
+                  {unit.baths || 0} Bathroom{unit.baths !== 1 ? 's' : ''}
                 </Badge>
                 <Badge variant="outline" data-testid="unit-capacity">
                   Sleeps {unit.capacity}
@@ -109,13 +113,19 @@ export default function UnitDetail() {
               </div>
 
               <p className="text-muted-foreground leading-relaxed mb-6" data-testid="unit-description">
-                {unit.description}
+                Experience comfort and convenience in this well-appointed accommodation at Palm Aire Court.
               </p>
 
               {/* Amenities */}
               <div className="mb-8">
                 <h3 className="font-semibold text-lg mb-4">Unit Amenities</h3>
-                <AmenitiesList amenityIds={unit.amenities} />
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {unit.amenities?.map((amenity) => (
+                    <div key={amenity} className="text-sm text-muted-foreground">
+                      • {amenity.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -139,9 +149,9 @@ export default function UnitDetail() {
               <div>
                 <h3 className="font-semibold text-lg mb-4">Policies</h3>
                 <ul className="space-y-2 text-sm">
-                  {unit.policies.map((policy, index) => (
+                  {unit.features?.map((feature, index) => (
                     <li key={index} className="text-muted-foreground">
-                      • {policy}
+                      • {feature}
                     </li>
                   ))}
                 </ul>
@@ -153,7 +163,7 @@ export default function UnitDetail() {
           </div>
 
           {/* Booking Card */}
-          <BookingCard unit={unit} rate={rate} />
+          <BookingCard unit={unit} />
         </div>
       </div>
     </div>

@@ -12,6 +12,7 @@ import Amenities from "@/pages/amenities";
 import About from "@/pages/about";
 import Terms from "@/pages/terms";
 import Contact from "@/pages/contact";
+import Booking from "@/pages/booking";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import ChatbotWidget from "@/components/chatbot-widget";
@@ -30,6 +31,7 @@ function Router() {
           <Route path="/about" component={About} />
           <Route path="/terms" component={Terms} />
           <Route path="/contact" component={Contact} />
+          <Route path="/booking" component={Booking} />
           <Route component={NotFound} />
         </Switch>
       </main>

@@ -2,12 +2,8 @@ import { useState, useMemo } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import DateRangePicker from '@/components/date-range-picker';
 import UnitCard from '@/components/unit-card';
-import { isDateRangeAvailable, getUnavailableDates } from '@/lib/date';
-import unitsData from '@/data/units.json';
-import ratesData from '@/data/rates.json';
-import availabilityData from '@/data/availability.json';
+import { useUnits } from '@/hooks/use-api';
 import type { DateRange } from 'react-day-picker';
-import type { Unit, Rate, AvailabilityEntry } from '@/types';
 
 export default function Stays() {
   const [unitType, setUnitType] = useState<string>('all');
@@ -15,20 +11,15 @@ export default function Stays() {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [sortBy, setSortBy] = useState<string>('price-low');
 
-  const units = unitsData as Unit[];
-  const rates = ratesData as Rate[];
-  const availability = availabilityData as AvailabilityEntry[];
-  
-  const unavailableDates = getUnavailableDates(availability);
+  const { data: units = [], isLoading } = useUnits();
 
   const isDateDisabled = (date: Date) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     if (date < today) return true;
 
-    return unavailableDates.some(unavailableDate => {
-      return unavailableDate.getTime() === date.getTime();
-    });
+    // For now, don't disable any future dates - will implement proper availability calendar later
+    return false;
   };
 
   const filteredUnits = useMemo(() => {
@@ -45,38 +36,38 @@ export default function Stays() {
       filtered = filtered.filter(unit => unit.capacity >= capacity);
     }
 
-    // Filter by date availability
-    if (dateRange?.from && dateRange?.to) {
-      filtered = filtered.filter(unit =>
-        isDateRangeAvailable(unit.id, dateRange.from!, dateRange.to!, availability)
-      );
-    }
+    // TODO: Implement date availability filtering with API
+    // if (dateRange?.from && dateRange?.to) {
+    //   filtered = filtered.filter(unit =>
+    //     isDateRangeAvailable(unit.id, dateRange.from!, dateRange.to!, availability)
+    //   );
+    // }
 
     // Sort units
     filtered.sort((a, b) => {
-      const rateA = rates.find(r => r.category === a.rateCategory);
-      const rateB = rates.find(r => r.category === b.rateCategory);
-
       switch (sortBy) {
-        case 'price-low':
-          return (rateA?.nightly || 0) - (rateB?.nightly || 0);
-        case 'price-high':
-          return (rateB?.nightly || 0) - (rateA?.nightly || 0);
         case 'capacity':
           return b.capacity - a.capacity;
         case 'type':
-          return a.type.localeCompare(b.type);
+          return (a.type || '').localeCompare(b.type || '');
+        case 'price-low':
+        case 'price-high':
         default:
-          return 0;
+          return 0; // Price sorting will be implemented with pricing API
       }
     });
 
     return filtered;
-  }, [units, rates, availability, unitType, guestCapacity, dateRange, sortBy]);
+  }, [units, unitType, guestCapacity, dateRange, sortBy]);
 
-  const getRateForUnit = (unit: Unit): Rate | undefined => {
-    return rates.find(rate => rate.category === unit.rateCategory);
-  };
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background py-8" data-testid="stays-page">
@@ -165,7 +156,6 @@ export default function Stays() {
               <UnitCard
                 key={unit.id}
                 unit={unit}
-                rate={getRateForUnit(unit)}
               />
             ))}
           </div>

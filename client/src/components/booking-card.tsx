@@ -4,27 +4,26 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import DateRangePicker from './date-range-picker';
-import { calculatePricing, formatCurrency } from '@/lib/pricing';
-import { getUnavailableDates, isValidDateRange } from '@/lib/date';
+import { formatCurrency } from '@/lib/pricing';
 import { useLocation } from 'wouter';
-import availabilityData from '@/data/availability.json';
+import { usePricing, useAvailability, Unit } from '@/hooks/use-api';
 import type { DateRange } from 'react-day-picker';
-import type { Unit, Rate, AvailabilityEntry, PricingBreakdown } from '@/types';
 
 interface BookingCardProps {
   unit: Unit;
-  rate: Rate;
 }
 
-export default function BookingCard({ unit, rate }: BookingCardProps) {
+export default function BookingCard({ unit }: BookingCardProps) {
   const [, setLocation] = useLocation();
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [guests, setGuests] = useState(1);
-  const [pricing, setPricing] = useState<PricingBreakdown | null>(null);
   const [showQuoteDialog, setShowQuoteDialog] = useState(false);
 
-  const availability = availabilityData as AvailabilityEntry[];
-  const unavailableDates = getUnavailableDates(availability, unit.id);
+  const checkIn = dateRange?.from ? dateRange.from.toISOString().split('T')[0] : '';
+  const checkOut = dateRange?.to ? dateRange.to.toISOString().split('T')[0] : '';
+
+  const { data: pricing, isLoading: pricingLoading } = usePricing(unit.id, checkIn, checkOut, guests);
+  const { data: availability } = useAvailability(unit.id, checkIn, checkOut);
 
   const isDateDisabled = (date: Date) => {
     // Disable past dates
@@ -32,20 +31,11 @@ export default function BookingCard({ unit, rate }: BookingCardProps) {
     today.setHours(0, 0, 0, 0);
     if (date < today) return true;
 
-    // Disable unavailable dates
-    return unavailableDates.some(unavailableDate => {
-      return unavailableDate.getTime() === date.getTime();
-    });
+    // For now, don't disable any future dates - will implement proper availability calendar later
+    return false;
   };
 
-  useEffect(() => {
-    if (dateRange?.from && dateRange?.to && isValidDateRange(dateRange.from, dateRange.to)) {
-      const calculatedPricing = calculatePricing(rate, dateRange.from, dateRange.to);
-      setPricing(calculatedPricing);
-    } else {
-      setPricing(null);
-    }
-  }, [dateRange, rate]);
+  // Pricing is now handled by the API hook
 
   const handleReservation = () => {
     if (!dateRange?.from || !dateRange?.to || !pricing) return;
@@ -54,16 +44,18 @@ export default function BookingCard({ unit, rate }: BookingCardProps) {
   };
 
   const handleContinue = () => {
-    if (!dateRange?.from || !dateRange?.to) return;
+    if (!dateRange?.from || !dateRange?.to || !pricing) return;
     
     const params = new URLSearchParams({
-      unit: unit.id,
+      unitId: unit.id,
+      unitName: unit.name,
       checkIn: dateRange.from.toISOString().split('T')[0],
       checkOut: dateRange.to.toISOString().split('T')[0],
       guests: guests.toString(),
+      total: pricing.total.toString(),
     });
     
-    setLocation(`/contact?${params.toString()}`);
+    setLocation(`/booking?${params.toString()}`);
   };
 
   const canReserve = dateRange?.from && dateRange?.to && pricing;
@@ -75,7 +67,7 @@ export default function BookingCard({ unit, rate }: BookingCardProps) {
           <div className="mb-6">
             <div className="flex items-baseline space-x-2 mb-2">
               <span className="text-2xl font-bold text-primary" data-testid="booking-price">
-                {formatCurrency(rate.nightly)}
+                From $45
               </span>
               <span className="text-muted-foreground">per night</span>
             </div>
@@ -112,33 +104,49 @@ export default function BookingCard({ unit, rate }: BookingCardProps) {
           </div>
 
           {/* Price Breakdown */}
+          {pricingLoading && checkIn && checkOut && (
+            <div className="border-t border-border pt-4 mb-6">
+              <div className="animate-pulse space-y-2">
+                <div className="h-4 bg-muted rounded w-3/4"></div>
+                <div className="h-4 bg-muted rounded w-1/2"></div>
+                <div className="h-4 bg-muted rounded w-2/3"></div>
+              </div>
+            </div>
+          )}
+          
           {pricing && (
             <div className="border-t border-border pt-4 mb-6" data-testid="price-breakdown">
               <div className="flex justify-between items-center mb-2">
-                <span>{formatCurrency(pricing.baseRate)} × {pricing.nights} nights</span>
-                <span>{formatCurrency(pricing.baseTotal)}</span>
+                <span>${(pricing.pricePerNight / 100).toFixed(2)} × {pricing.totalNights} nights</span>
+                <span>${(pricing.subtotal / 100).toFixed(2)}</span>
               </div>
               
-              {pricing.discountAmount > 0 && (
+              {pricing.seasonalDiscount > 0 && (
                 <div className="flex justify-between items-center mb-2 text-green-600">
-                  <span>{pricing.rateType} discount ({pricing.discountPercent}%)</span>
-                  <span>-{formatCurrency(pricing.discountAmount)}</span>
+                  <span>Seasonal discount ({pricing.discountPercentage}%)</span>
+                  <span>-${(pricing.seasonalDiscount / 100).toFixed(2)}</span>
                 </div>
               )}
               
-              {pricing.cleaningFee > 0 && (
-                <div className="flex justify-between items-center mb-2">
-                  <span>Cleaning fee</span>
-                  <span>{formatCurrency(pricing.cleaningFee)}</span>
+              {pricing.fees.map((fee) => (
+                <div key={fee.name} className="flex justify-between items-center mb-2">
+                  <span>{fee.name}</span>
+                  <span>${(fee.amount / 100).toFixed(2)}</span>
                 </div>
-              )}
+              ))}
               
               <div className="border-t border-border pt-2 mt-2">
                 <div className="flex justify-between items-center font-semibold">
                   <span>Total</span>
-                  <span data-testid="booking-total">{formatCurrency(pricing.total)}</span>
+                  <span data-testid="booking-total">${(pricing.total / 100).toFixed(2)}</span>
                 </div>
               </div>
+              
+              {availability && !availability.available && (
+                <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-sm text-red-700">
+                  These dates are not available
+                </div>
+              )}
             </div>
           )}
 
@@ -174,33 +182,39 @@ export default function BookingCard({ unit, rate }: BookingCardProps) {
                   
                   <div className="border-t pt-4">
                     <div className="flex justify-between mb-2">
-                      <span>{pricing.nights} nights</span>
-                      <span>{formatCurrency(pricing.baseTotal)}</span>
+                      <span>{pricing.totalNights} nights</span>
+                      <span>${(pricing.subtotal / 100).toFixed(2)}</span>
                     </div>
                     
-                    {pricing.discountAmount > 0 && (
+                    {pricing.seasonalDiscount > 0 && (
                       <div className="flex justify-between mb-2 text-green-600">
                         <span>Discount</span>
-                        <span>-{formatCurrency(pricing.discountAmount)}</span>
+                        <span>-${(pricing.seasonalDiscount / 100).toFixed(2)}</span>
                       </div>
                     )}
                     
-                    {pricing.cleaningFee > 0 && (
-                      <div className="flex justify-between mb-2">
-                        <span>Cleaning fee</span>
-                        <span>{formatCurrency(pricing.cleaningFee)}</span>
+                    {pricing.fees.map((fee) => (
+                      <div key={fee.name} className="flex justify-between mb-2">
+                        <span>{fee.name}</span>
+                        <span>${(fee.amount / 100).toFixed(2)}</span>
                       </div>
-                    )}
+                    ))}
                     
                     <div className="border-t pt-2 flex justify-between font-semibold">
                       <span>Total</span>
-                      <span>{formatCurrency(pricing.total)}</span>
+                      <span>${(pricing.total / 100).toFixed(2)}</span>
                     </div>
                   </div>
                   
-                  <Button onClick={handleContinue} className="w-full" data-testid="continue-booking">
-                    Continue (Demo)
-                  </Button>
+                  {availability?.available ? (
+                    <Button onClick={handleContinue} className="w-full" data-testid="continue-booking">
+                      Book Now
+                    </Button>
+                  ) : (
+                    <Button disabled className="w-full">
+                      Dates Not Available
+                    </Button>
+                  )}
                 </div>
               )}
             </DialogContent>

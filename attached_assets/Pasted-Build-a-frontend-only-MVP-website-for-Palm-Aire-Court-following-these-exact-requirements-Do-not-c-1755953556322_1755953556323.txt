@@ -1,0 +1,112 @@
+Build a frontend-only MVP website for ‘Palm Aire Court’ following these exact requirements. Do not create any backend, database, or external services. Use only local mock JSON files for data.
+
+Stack and conventions:
+
+Next.js 14 with the App Router, TypeScript, Tailwind CSS, shadcn/ui (Radix), Lucide icons.
+React DayPicker for date-range selection.
+React Hook Form + Zod where forms exist.
+next/image for all images (use https://placehold.co/1200x800 images with descriptive alt).
+next-seo for SEO metadata per page.
+No server DB calls, no API routes for data; import JSON directly.
+All currency is USD.
+Project structure (App Router):
+
+app/
+layout.tsx, globals.css
+page.tsx (Home)
+stays/page.tsx (Accommodations index)
+stays/[slug]/page.tsx (Unit details)
+rates/page.tsx
+amenities/page.tsx
+about/page.tsx
+terms/page.tsx
+contact/page.tsx
+components/ (Navbar, Footer, Card, Gallery, Badge, BookingCard, DateRangePicker, AmenitiesList, FAQ, ChatbotWidget, MapTeaser)
+lib/ (pricing.ts, date.ts helpers)
+data/ (units.json, rates.json, availability.json, amenities.json, faqs.json)
+Do not add API route handlers in this phase except for Next SEO config if needed.
+Design system:
+
+Tailwind with a warm desert palette:
+Primary: #E07A5F, Primary-foreground: white
+Accent: #F2CC8F, Muted: #EEEAE6, Text: #1F2937
+Rounded corners, subtle shadows, spacious line-heights.
+Typography: system font stack with a friendly display font for H1 (e.g., Poppins via @import).
+Spacing scale: Tailwind defaults; use container max-w-7xl.
+Pages and behavior:
+
+Home (/)
+Hero: headline “Palm Aire Court — Phoenix, Arizona”, subheadline, two CTA buttons:
+Primary: “Check availability” routes to /stays
+Secondary: “See rates” routes to /rates
+Highlights strip (at least 6 badges): Wi‑Fi, USPS Delivery, Pavilion w/ BBQ & Smoker & Blackstone, Reverse Osmosis Water, Shuffleboard, Community Activities.
+Featured stays: 3 cards sourced from units.json, each with image, name, type, capacity, “From $X/night”, and link to unit page.
+Community section summarizing activities (“9:30 Coffee Time, Movie Night, Hymn Sings, Puzzles, Games, Fellowship Meals”).
+Map teaser (static image) and address block.
+Footer with contact: 9616 N 12th St, Phoenix, AZ 85020 • 480‑993‑8431 • palmairecourt@outlook.com; links: Stays, Rates, Amenities, Terms, Contact.
+Accommodations index (/stays)
+Load units from data/units.json.
+Top filter bar:
+Unit Type select: All, Trailers, Cottages 1BR, Cottages 2BR, RV Sites.
+Guests select (1–8).
+Optional date-range picker (DayPicker in a popover).
+Show a responsive grid of cards. Each card shows:
+Photo, name, type, capacity, “From $X/night” (computed from rates.json), and View Details button.
+If dates are selected, show a subheading like “N units available for your dates (demo)” and hide any unit that overlaps booked ranges from availability.json.
+Unit detail (/stays/[slug])
+Read unit from units.json by slug.
+Gallery: 4-image grid on desktop; carousel on mobile.
+Title, type, capacity, beds/baths, badges “No pets” and “No smoking”.
+Amenities list from unit. Reuse AmenitiesList component.
+Description paragraph(s).
+Sticky BookingCard component (right column desktop; bottom sheet mobile):
+Shows a price area, check-in/out (DayPicker range), guest selector (1–6), and a prominent “Reserve” button.
+Price calculation uses lib/pricing.ts and data from rates.json:
+Choose best tier: fourMonth > monthly > weekly > nightly.
+Seasonal discounts: 10% in November and April; 20% May–October. Apply by per-night prorate for demo.
+Cleaning fee: $40 once per stay.
+Show a breakdown (Base, Discount, Cleaning, Estimated Total). No taxes in demo.
+If no dates chosen, disable Reserve and show helper text.
+On Reserve click with dates set, open a Dialog summarizing the quote and a button “Continue (demo)” → routes to /contact with unit and dates in query params.
+FAQ accordion under the description (from faqs.json).
+Map teaser image.
+Policies snippet with link to /terms.
+Rates & Discounts (/rates)
+Present normalized pricing for all units/categories using data from rates.json.
+Explain seasonal discounts and cleaning fee.
+Include a disclaimer that this is an estimate and final totals appear at checkout (Phase 2).
+Amenities & Community (/amenities)
+Grid of amenity cards with icons and short descriptions.
+Section describing community activities.
+About (/about)
+Short, friendly narrative about Palm Aire Court and nearby points of interest.
+Terms (/terms)
+Static placeholder sections (Use of Site, Booking Terms, Cancellations, House Rules, Liability, Privacy link).
+Contact (/contact)
+Contact card with phone, email, address, map image.
+Simple inquiry form (name, email, phone, message, preferred dates). The form validates but only logs to console in this phase.
+Floating Chatbot:
+
+A circular button bottom-right opens a modal with:
+Quick actions as buttons: “Check availability”, “Get a quote”, “Go to booking”.
+For this demo, actions read from the same JSON and show a result in the modal.
+This is purely client-side; no network calls.
+Data files to create in /data:
+
+units.json: include these example units with slugs and representative fields:
+essex, view, 9606-2br, 9608-1br, 9618-2br, trailer-example, rv-site-example
+rates.json: nightly/weekly/monthly/fourMonth per unit or category; cleaningFee=40; discount windows: Nov & Apr 10%, May–Oct 20%.
+availability.json: for each unit provide 2–3 booked ranges in ISO format (YYYY‑MM‑DD).
+amenities.json: list core park amenities and unit amenities.
+faqs.json: at least 6 Q&A items (rules, check‑in/out, Wi‑Fi, parking, long stays, contact).
+Acceptance criteria:
+
+The site builds with Next.js 14, TypeScript, Tailwind, and shadcn/ui.
+All routes render with content sourced from local JSON; no external calls.
+Unit pages have a sticky BookingCard that computes an estimated total using the pricing rules and shows disabled dates for booked ranges.
+The accommodations index filters by unit type and guests, and hides units that conflict with selected dates (demo logic).
+The floating chatbot opens and performs the three quick actions using local data.
+All pages include sensible SEO metadata via next-seo.
+The UI matches a clean Airbnb-like style: prominent gallery, right-side booking card on desktop, clear CTAs, mobile-friendly.
+Lighthouse: aim for 90+ in Performance/Accessibility/Best Practices on a local run.
+Do not add backend code, databases, or payments. Keep everything in the frontend with mock JSON so it’s ready to swap for real APIs in Phase 2

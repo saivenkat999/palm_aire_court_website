@@ -1,0 +1,307 @@
+Build the backend for the “Palm Aire Court” project. The frontend from Phase 1 already exists. Add the following in the same Next.js repo. Do not redesign the UI. Implement only API routes, DB, pricing engine, Stripe, webhooks, holds, bookings, iCal, and cron. Follow these instructions exactly.
+
+Technology and environment
+Keep Next.js 14 with App Router and TypeScript.
+Add Prisma as ORM and connect to a Postgres database (Supabase recommended).
+Add Stripe SDK for server‑side payment intents.
+Add zod for input validation on API routes.
+Optional: Upstash Redis for simple rate limiting on write endpoints.
+Place all environment variables in .env.local and reference via process.env:
+DATABASE_URL= (Postgres)
+DIRECT_URL= (optional for Prisma)
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+SERVICE_API_KEY= (random long string for n8n/bot and site to call private endpoints)
+ORIGIN=https://your‑prod‑domain.com (CORS)
+Do not expose secrets to the client.
+Prisma schema (create prisma/schema.prisma) and migrate
+Use the following schema. Also create a SQL migration to enable btree_gist and add exclusion constraints.
+prisma
+Copy
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Unit {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  type        UnitType
+  capacity    Int
+  beds        Int?
+  baths       Int?
+  amenities   String[] @default([])
+  features    String[] @default([])
+  photos      String[] @default([])
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  ratePlans   RatePlan[]
+  holds       Hold[]
+  bookings    Booking[]
+}
+
+enum UnitType {
+  TRAILER
+  COTTAGE_1BR
+  COTTAGE_2BR
+  RV_SITE
+}
+
+model RatePlan {
+  id          String   @id @default(cuid())
+  unit        Unit?    @relation(fields: [unitId], references: [id])
+  unitId      String?
+  category    UnitType? // if you want category‑wide rates for multiple units
+  nightly     Int?     // cents
+  weekly      Int?
+  monthly     Int?
+  fourMonth   Int?
+  currency    String   @default("USD")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Season {
+  id          String   @id @default(cuid())
+  name        String
+  startDate   DateTime
+  endDate     DateTime
+  discountPct Int      // e.g., 10 = 10%
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Fee {
+  id          String   @id @default(cuid())
+  name        String   // "Cleaning Fee"
+  amount      Int      // cents
+  perStay     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Hold {
+  id          String   @id @default(cuid())
+  unit        Unit     @relation(fields: [unitId], references: [id])
+  unitId      String
+  checkIn     DateTime
+  checkOut    DateTime
+  expiresAt   DateTime
+  status      HoldStatus @default(ACTIVE)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum HoldStatus {
+  ACTIVE
+  EXPIRED
+  CONVERTED
+  CANCELLED
+}
+
+model Booking {
+  id          String   @id @default(cuid())
+  unit        Unit     @relation(fields: [unitId], references: [id])
+  unitId      String
+  customer    Customer @relation(fields: [customerId], references: [id])
+  customerId  String
+  checkIn     DateTime
+  checkOut    DateTime
+  status      BookingStatus @default(CONFIRMED)
+  totalCents  Int
+  currency    String   @default("USD")
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  payment     Payment?
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+}
+
+model Customer {
+  id          String   @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String   @unique
+  phone       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  bookings    Booking[]
+}
+
+model Payment {
+  id               String   @id @default(cuid())
+  booking          Booking  @relation(fields: [bookingId], references: [id])
+  bookingId        String   @unique
+  provider         String   @default("stripe")
+  stripeIntentId   String   @unique
+  amountCents      Int
+  currency         String   @default("USD")
+  status           String   // "succeeded", "requires_payment_method", etc.
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+Create a SQL migration to enable btree_gist and add exclusion constraints for overlap:
+sql
+Copy
+-- prisma/migrations/<timestamp>_exclusions/migration.sql
+CREATE EXTENSION IF NOT EXISTS btree_gist;
+
+-- Holds cannot overlap per unit while ACTIVE
+CREATE INDEX IF NOT EXISTS holds_unit_range_idx
+ON "Hold" USING gist ( "unitId", tstzrange("checkIn","checkOut",'[]') );
+
+-- Bookings cannot overlap per unit
+CREATE INDEX IF NOT EXISTS bookings_unit_range_idx
+ON "Booking" USING gist ( "unitId", tstzrange("checkIn","checkOut",'[]') );
+Note: Prisma does not natively define EXCLUDE constraints; we emulate with GiST range indexes and enforce in application logic and transactions. If you prefer strict DB exclusion, add explicit EXCLUDE USING gist constraints in a raw SQL migration.
+
+Seed script
+Create prisma/seed.ts to insert:
+Units for Essex, View, 9606-2BR, 9608-1BR, 9618-2BR, and sample Trailer‑01..03 and RV‑01..03
+RatePlans reflecting Phase‑1 numbers (in cents)
+Seasons:
+“Nov Discount” 10% for Nov 1–30
+“Apr Discount” 10% for Apr 1–30
+“Summer Discount” 20% for May 1–Oct 31
+Fee: Cleaning Fee $40 per stay
+Wire “prisma db seed” in package.json.
+Server pricing engine
+Implement lib/server/pricing.ts exporting:
+computeQuote({ unitId, checkIn, checkOut }): returns:
+lineItems: [{ label, amountCents }]
+baseCents, discountCents, feesCents, totalCents, currency, nights
+assumptions: weekly = 7 nights; monthly = 30 nights; fourMonth = 120 nights
+seasonal discounts prorated per night by date
+Helper to fetch unit‑level plan; fall back to category plan if unit plan missing.
+API routes (all under /app/api/v1). Use route handlers with zod validation. Add simple Bearer auth for write endpoints.
+Public (no auth):
+
+GET /units
+Returns list of active units with basic fields.
+GET /units/[id]
+Returns unit details.
+GET /availability
+Query: unitId, start=YYYY-MM-DD, end=YYYY-MM-DD
+Returns an array of date ranges that are unavailable (bookings + active holds) and a boolean “isAvailable” for the requested span.
+POST /quote
+Body: { unitId, checkIn, checkOut }
+Returns computeQuote payload.
+Private (require Authorization: Bearer SERVICE_API_KEY). These will be called by the website when user clicks Reserve and by n8n.
+
+POST /holds
+Body: { unitId, checkIn, checkOut, ttlMinutes?: number, customer?: { firstName, lastName, email, phone? } }
+Behavior:
+Validate availability in a SERIALIZABLE transaction.
+Insert Hold with expiresAt = now + ttl (default 15 min).
+Upsert Customer if provided (useful for prefill).
+Return { holdId, expiresAt }.
+POST /checkout
+Body: { holdId, customer: { firstName, lastName, email, phone? } }
+Behavior:
+Look up hold (ACTIVE, not expired).
+Recompute quote for safety.
+Create or update Customer.
+Create Stripe PaymentIntent for totalCents with metadata { holdId, unitId } and receipt_email.
+Return { clientSecret } or { checkoutUrl } (either hosted payment element or redirect checkout is acceptable).
+POST /bookings/cancel
+Body: { bookingId, reason? }
+Marks booking CANCELLED and optionally issues refund via Stripe if within policy (Phase‑2 basic: no refund logic, just status).
+GET /units/[id]/ical.ics
+Public ICS feed that lists confirmed bookings as VEVENT blocks.
+Webhook:
+
+POST /webhooks/stripe
+Verify signature.
+On payment_intent.succeeded:
+In a DB transaction:
+Find hold via metadata.
+Insert Booking with hold’s dates and computed total; link Customer.
+Insert Payment.
+Mark hold CONVERTED and optionally delete.
+On payment_intent.payment_failed: log; hold remains until expiry.
+Transactions and isolation
+For /holds and webhook conversion, use explicit transactions with SERIALIZABLE isolation if supported in environment; otherwise REPEATABLE READ plus range checks.
+Revalidate availability inside the transaction before inserting.
+Cron job to expire holds
+Create /app/api/internal/expire-holds/route.ts (protected by a CRON_SECRET header).
+Logic:
+Update holds where expiresAt < now and status=ACTIVE → status=EXPIRED.
+Configure Vercel Cron to call every minute with header X‑CRON‑SECRET.
+Rate limiting (optional)
+For /holds and /checkout, use simple Redis‑backed sliding window keyed by IP and unitId to prevent abuse (e.g., 10/min).
+CORS
+Allow only ORIGIN and n8n origin to call private endpoints. Public endpoints can be GET with same origin in production.
+iCal feed
+Implement ICS generation from confirmed bookings:
+UID: booking.id
+DTSTART/DTEND in UTC (check‑in/check‑out)
+SUMMARY: Palm Aire Court —
+Content‑Type: text/calendar.
+n8n chatbot integration (tool contracts)
+n8n should call these endpoints:
+Availability check: GET /availability?unitId=&start=&end=
+Quote: POST /quote
+Place hold: POST /holds (requires SERVICE_API_KEY)
+Checkout: POST /checkout (requires SERVICE_API_KEY)
+Optional: Cancel booking: POST /bookings/cancel (requires SERVICE_API_KEY)
+Return concise JSON for the bot to speak:
+availability: { isAvailable, reason? }
+quote: { nights, baseCents, discountCents, feesCents, totalCents, currency }
+Bot can deep‑link the user to the unit detail page with dates in URL; your frontend should read ?checkIn=&checkOut=&unitId= and call /quote to render server totals.
+Wire the frontend to the backend
+Update Phase‑1 BookingCard to:
+On date selection, call POST /quote and render server result.
+On Reserve click, call POST /holds with SERVICE_API_KEY from server (never expose in client; create a thin server action or route handler that proxies with secret).
+After hold is created, call POST /checkout to obtain a Stripe client_secret and render Payment Element page (Phase‑1 can have a minimal /checkout route to mount Stripe; UI scope is tiny).
+Replace client availability logic with GET /availability.
+Testing and acceptance
+Unit tests for pricing engine (different date spans across seasons and rate tiers).
+Integration tests for:
+Creating overlapping holds (should fail appropriately)
+Hold → PaymentIntent → Webhook → Booking
+Manual flow:
+Create a hold; confirm in DB
+Complete a test payment (Stripe test mode); confirm booking created; hold converted
+iCal URL opens in a calendar app and shows booking
+Cron endpoint expires stale holds
+Logging:
+Log each API call with requestId, route, status, duration; redact PII.
+Deployment notes
+Host DB on Supabase; run prisma migrate deploy; run seed once.
+Host app on Vercel; add Vercel Cron for hold expiry; set Stripe webhook to /api/v1/webhooks/stripe.
+Ensure /api/v1 routes run in Node runtime (not Edge) because of Stripe.
+Security
+Validate and sanitize all inputs with zod.
+Protect write routes with Bearer SERVICE_API_KEY checked server‑side (never in client).
+Webhook signature verification required.
+Do not leak pricing internals or secrets in error messages.
+Use HTTPS everywhere; CORS restrict origins.
+Acceptance criteria:
+
+Frontend now shows live availability and quotes from server.
+“Reserve” initiates a hold; completing Stripe test payment creates a booking and releases the hold.
+Overlapping holds/bookings for the same unit are prevented even under concurrent requests.
+iCal feed works per unit.
+n8n can check availability, get quotes, create holds, and initiate checkout via the documented endpoints.
+Deliverables:
+
+Prisma schema and migrations applied.
+Seeded data mirroring Phase‑1 units and rates.
+Implemented server pricing engine.
+All API routes under /app/api/v1/* with zod validation and error handling.
+Stripe webhook handler and cron endpoint for hold expiry.
+Minimal wiring in the existing frontend to call server for quote/holds/checkout (no design changes).

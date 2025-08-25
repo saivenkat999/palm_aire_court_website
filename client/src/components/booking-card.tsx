@@ -52,7 +52,7 @@ export default function BookingCard({ unit }: BookingCardProps) {
       checkIn: dateRange.from.toISOString().split('T')[0],
       checkOut: dateRange.to.toISOString().split('T')[0],
       guests: guests.toString(),
-      total: pricing.total.toString(),
+      total: pricing.total.toString(), // This is already in cents from the API
     });
     
     setLocation(`/booking?${params.toString()}`);

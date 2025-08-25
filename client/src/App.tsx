@@ -13,6 +13,10 @@ import About from "@/pages/about";
 import Terms from "@/pages/terms";
 import Contact from "@/pages/contact";
 import Booking from "@/pages/booking";
+import BookingConfirmation from "@/pages/booking-confirmation";
+import AdminLogin from "@/pages/admin/login";
+import AdminDashboard from "@/pages/admin/dashboard";
+import AdminCalendar from "@/pages/admin/calendar";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import ChatbotWidget from "@/components/chatbot-widget";
@@ -32,6 +36,10 @@ function Router() {
           <Route path="/terms" component={Terms} />
           <Route path="/contact" component={Contact} />
           <Route path="/booking" component={Booking} />
+          <Route path="/booking/confirmation" component={BookingConfirmation} />
+          <Route path="/admin/login" component={AdminLogin} />
+          <Route path="/admin/dashboard" component={AdminDashboard} />
+          <Route path="/admin/calendar" component={AdminCalendar} />
           <Route component={NotFound} />
         </Switch>
       </main>

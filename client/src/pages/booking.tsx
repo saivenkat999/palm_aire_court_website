@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useParams } from 'wouter';
+import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,9 +10,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
+import { useStripe } from '@/hooks/use-stripe';
 import { useCreateBooking } from '@/hooks/use-api';
+import PaymentForm from '@/components/payment-form';
 import { z } from 'zod';
-import { CalendarDays, Users, MapPin, CreditCard, Check } from 'lucide-react';
+import { CalendarDays, Users, MapPin, CreditCard, Check, ChevronRight, Loader2 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 
 const bookingFormSchema = z.object({
@@ -24,11 +26,19 @@ const bookingFormSchema = z.object({
 
 type BookingFormData = z.infer<typeof bookingFormSchema>;
 
+type BookingStep = 'details' | 'payment' | 'confirmation';
+
 export default function BookingPage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
+  const [currentStep, setCurrentStep] = useState<BookingStep>('details');
+  const [bookingData, setBookingData] = useState<BookingFormData | null>(null);
+  const [bookingId, setBookingId] = useState<string | null>(null);
+  const [paymentClientSecret, setPaymentClientSecret] = useState<string | null>(null);
+  const [stripePublishableKey, setStripePublishableKey] = useState<string>('');
+  
+  const { createPaymentIntent, stripe } = useStripe();
+  const createBookingMutation = useCreateBooking();
   // Get booking details from URL params
   const searchParams = new URLSearchParams(window.location.search);
   const unitId = searchParams.get('unitId') || '';
@@ -36,9 +46,7 @@ export default function BookingPage() {
   const checkIn = searchParams.get('checkIn') || '';
   const checkOut = searchParams.get('checkOut') || '';
   const guests = parseInt(searchParams.get('guests') || '1');
-  const total = parseFloat(searchParams.get('total') || '0');
-
-  const createBookingMutation = useCreateBooking();
+  const totalCents = parseInt(searchParams.get('total') || '0'); // Convert to cents for Stripe
 
   const form = useForm<BookingFormData>({
     resolver: zodResolver(bookingFormSchema),
@@ -50,9 +58,21 @@ export default function BookingPage() {
     },
   });
 
+  // Fetch Stripe config on mount
+  useEffect(() => {
+    fetch('/api/stripe-config')
+      .then(res => res.json())
+      .then(data => {
+        if (data.publishableKey) {
+          setStripePublishableKey(data.publishableKey);
+        }
+      })
+      .catch(err => console.error('Failed to fetch Stripe config:', err));
+  }, []);
+
   // Redirect if missing essential booking data
   useEffect(() => {
-    if (!unitId || !checkIn || !checkOut || !total) {
+    if (!unitId || !checkIn || !checkOut || !totalCents) {
       toast({
         variant: "destructive",
         title: "Invalid booking data",
@@ -60,149 +80,219 @@ export default function BookingPage() {
       });
       setLocation('/stays');
     }
-  }, [unitId, checkIn, checkOut, total, setLocation, toast]);
+  }, [unitId, checkIn, checkOut, totalCents, setLocation, toast]);
 
-  const onSubmit = async (data: BookingFormData) => {
+  // Step 1: Handle guest details submission
+  const onSubmitDetails = async (data: BookingFormData) => {
     try {
-      const bookingData = {
+      setBookingData(data);
+      
+      // Create payment intent
+      const paymentData = await createPaymentIntent({
+        amount: totalCents,
+        customerEmail: data.guestEmail,
+        metadata: {
+          unitId,
+          unitName,
+          checkIn,
+          checkOut,
+          guests: guests.toString(),
+          guestName: data.guestName,
+          guestPhone: data.guestPhone,
+        }
+      });
+
+      if (paymentData.clientSecret) {
+        setPaymentClientSecret(paymentData.clientSecret);
+        setCurrentStep('payment');
+      } else {
+        throw new Error('Failed to initialize payment');
+      }
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message || "Failed to proceed to payment",
+      });
+    }
+  };
+  // Step 2: Handle payment success
+  const handlePaymentSuccess = async (paymentIntent: any) => {
+    try {
+      if (!bookingData) {
+        throw new Error('Missing booking data');
+      }
+
+      // Create the booking in the database
+      const booking = await createBookingMutation.mutateAsync({
         unitId,
         checkIn,
         checkOut,
         guests,
-        guestName: data.guestName,
-        guestEmail: data.guestEmail,
-        guestPhone: data.guestPhone,
-        specialRequests: data.specialRequests,
-      };
-
-      const result = await createBookingMutation.mutateAsync(bookingData);
-      
-      setIsSubmitted(true);
-      
-      toast({
-        title: "Booking confirmed!",
-        description: "Your reservation has been created successfully.",
+        guestName: bookingData.guestName,
+        guestEmail: bookingData.guestEmail,
+        guestPhone: bookingData.guestPhone,
+        specialRequests: bookingData.specialRequests,
       });
 
-      // In a real implementation, this would redirect to payment or confirmation page
-      setTimeout(() => {
-        setLocation('/');
-      }, 3000);
-
+      // Store booking ID for confirmation page
+      localStorage.setItem('lastBookingId', booking.id);
+      
+      // Send confirmation email (in development mode, this will be logged)
+      try {
+        const { EmailService } = await import('@/lib/email-service');
+        await EmailService.sendBookingConfirmation({
+          bookingId: booking.id,
+          guestName: bookingData.guestName,
+          guestEmail: bookingData.guestEmail,
+          unitName: unitName,
+          checkIn,
+          checkOut,
+          totalAmount: totalCents,
+          specialRequests: bookingData.specialRequests,
+        });
+      } catch (emailError) {
+        console.warn('Email notification failed:', emailError);
+        // Don't fail the booking if email fails
+      }
+      
+      setBookingId(booking.id);
+      setCurrentStep('confirmation');
+      
+      toast({
+        title: "Payment successful!",
+        description: "Your booking has been confirmed.",
+      });
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Booking failed",
-        description: error.message || "Please try again or contact us directly.",
+        description: error.message || "Please contact support.",
       });
     }
   };
 
-  if (isSubmitted) {
+  // Handle payment error
+  const handlePaymentError = (error: string) => {
+    toast({
+      variant: "destructive",
+      title: "Payment failed",
+      description: error,
+    });
+  };
+
+  const formatPrice = (cents: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(cents / 100);
+  };
+
+  // Render different steps
+  if (currentStep === 'confirmation') {
     return (
-      <div className="min-h-screen bg-background py-12">
-        <div className="container mx-auto px-4 max-w-2xl">
-          <Card className="text-center">
-            <CardContent className="p-8">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Check className="w-8 h-8 text-green-600" />
-              </div>
-              <h1 className="text-2xl font-bold mb-2">Booking Confirmed!</h1>
-              <p className="text-muted-foreground mb-6">
-                Your reservation has been created successfully. You'll receive a confirmation email shortly.
+      <div className="container mx-auto px-4 py-8 max-w-2xl">
+        <Card className="text-center">
+          <CardContent className="pt-8 space-y-6">
+            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+              <Check className="h-10 w-10 text-green-600" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold mb-2">Booking Confirmed!</h2>
+              <p className="text-muted-foreground">
+                Your reservation has been successfully confirmed.
               </p>
-              <Button onClick={() => setLocation('/')}>
-                Return Home
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+            <div className="bg-muted rounded-lg p-4 text-left space-y-2">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Booking ID:</span>
+                <span className="font-mono">{bookingId}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Unit:</span>
+                <span>{unitName}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Check-in:</span>
+                <span>{format(parseISO(checkIn), 'MMM dd, yyyy')}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Check-out:</span>
+                <span>{format(parseISO(checkOut), 'MMM dd, yyyy')}</span>
+              </div>
+              <Separator className="my-2" />
+              <div className="flex justify-between font-semibold">
+                <span>Total Paid:</span>
+                <span className="text-primary">{formatPrice(totalCents)}</span>
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              A confirmation email has been sent to {bookingData?.guestEmail}
+            </p>
+            <Button onClick={() => setLocation('/')} className="w-full">
+              Return to Home
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
-
   return (
-    <div className="min-h-screen bg-background py-12">
-      <div className="container mx-auto px-4 max-w-4xl">
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* Booking Summary */}
-          <div>
-            <Card className="sticky top-24">
-              <CardHeader>
-                <CardTitle>Booking Summary</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <MapPin className="w-5 h-5 text-muted-foreground mt-1" />
-                  <div>
-                    <h3 className="font-semibold">{unitName}</h3>
-                    <p className="text-sm text-muted-foreground">Palm Aire Court</p>
-                  </div>
-                </div>
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Complete Your Booking</h1>
+        <p className="text-muted-foreground">Secure your stay at Palm Aire Court</p>
+      </div>
 
-                <div className="flex items-center space-x-3">
-                  <CalendarDays className="w-5 h-5 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium">
-                      {format(parseISO(checkIn), 'MMM d, yyyy')} - {format(parseISO(checkOut), 'MMM d, yyyy')}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24))} nights
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-3">
-                  <Users className="w-5 h-5 text-muted-foreground" />
-                  <p>{guests} guest{guests !== 1 ? 's' : ''}</p>
-                </div>
-
-                <Separator />
-
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold">Total Amount</span>
-                    <span className="text-xl font-bold">${(total / 100).toFixed(2)}</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Includes all taxes and fees
-                  </p>
-                </div>
-
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <CreditCard className="w-4 h-4 text-blue-600" />
-                    <span className="text-sm font-medium text-blue-800">Demo Mode</span>
-                  </div>
-                  <p className="text-xs text-blue-700">
-                    This is a demo booking. No payment will be charged.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+      {/* Progress Steps */}
+    <div className="flex items-center justify-center mb-8">
+        <div className="flex items-center space-x-4">
+      <div className={`flex items-center ${currentStep === 'details' ? 'text-primary' : 'text-muted-foreground'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${
+              currentStep === 'details' ? 'border-primary bg-primary text-white' : 'border-muted-foreground'
+            }`}>
+              1
+            </div>
+            <span className="ml-2 font-medium">Guest Details</span>
           </div>
+          <ChevronRight className="h-5 w-5 text-muted-foreground" />
+          <div className={`flex items-center ${currentStep === 'payment' ? 'text-primary' : 'text-muted-foreground'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${
+              currentStep === 'payment' ? 'border-primary bg-primary text-white' : 'border-muted-foreground'
+            }`}>
+              2
+            </div>
+            <span className="ml-2 font-medium">Payment</span>
+          </div>
+          <ChevronRight className="h-5 w-5 text-muted-foreground" />
+          <div className={`flex items-center ${false ? 'text-primary' : 'text-muted-foreground'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${false ? 'border-primary bg-primary text-white' : 'border-muted-foreground'}`}>
+              3
+            </div>
+            <span className="ml-2 font-medium">Confirmation</span>
+          </div>
+        </div>
+      </div>
 
-          {/* Booking Form */}
-          <div>
+      <div className="grid md:grid-cols-3 gap-8">
+        {/* Main Content */}
+        <div className="md:col-span-2">
+          {currentStep === 'details' ? (
             <Card>
               <CardHeader>
                 <CardTitle>Guest Information</CardTitle>
               </CardHeader>
               <CardContent>
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <form onSubmit={form.handleSubmit(onSubmitDetails)} className="space-y-4">
                     <FormField
                       control={form.control}
                       name="guestName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Full Name *</FormLabel>
+                          <FormLabel>Full Name</FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="John Doe"
-                              {...field}
-                              data-testid="guest-name-input"
-                            />
+                            <Input placeholder="John Doe" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -214,14 +304,9 @@ export default function BookingPage() {
                       name="guestEmail"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email Address *</FormLabel>
+                          <FormLabel>Email Address</FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="john@example.com"
-                              type="email"
-                              {...field}
-                              data-testid="guest-email-input"
-                            />
+                            <Input type="email" placeholder="john@example.com" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -233,13 +318,9 @@ export default function BookingPage() {
                       name="guestPhone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Phone Number *</FormLabel>
+                          <FormLabel>Phone Number</FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="(555) 123-4567"
-                              {...field}
-                              data-testid="guest-phone-input"
-                            />
+                            <Input type="tel" placeholder="(555) 123-4567" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -253,11 +334,10 @@ export default function BookingPage() {
                         <FormItem>
                           <FormLabel>Special Requests (Optional)</FormLabel>
                           <FormControl>
-                            <Textarea
-                              placeholder="Any special requests or accessibility needs..."
-                              className="min-h-[80px]"
+                            <Textarea 
+                              placeholder="Any special requests or notes for your stay..."
+                              className="min-h-[100px]"
                               {...field}
-                              data-testid="special-requests-input"
                             />
                           </FormControl>
                           <FormMessage />
@@ -265,30 +345,76 @@ export default function BookingPage() {
                       )}
                     />
 
-                    <Button
-                      type="submit"
-                      className="w-full"
-                      disabled={createBookingMutation.isPending}
-                      data-testid="confirm-booking-button"
-                    >
-                      {createBookingMutation.isPending ? (
-                        <div className="flex items-center space-x-2">
-                          <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
-                          <span>Processing...</span>
-                        </div>
-                      ) : (
-                        'Confirm Booking'
-                      )}
+                    <Button type="submit" className="w-full" size="lg">
+                      Continue to Payment
+                      <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
-
-                    <p className="text-xs text-muted-foreground text-center">
-                      By confirming this booking, you agree to our terms and conditions.
-                    </p>
                   </form>
                 </Form>
               </CardContent>
             </Card>
-          </div>
+          ) : currentStep === 'payment' && paymentClientSecret && stripePublishableKey ? (
+            <PaymentForm
+              clientSecret={paymentClientSecret}
+              amount={totalCents}
+              publishableKey={stripePublishableKey}
+              onSuccess={handlePaymentSuccess}
+              onError={handlePaymentError}
+            />
+          ) : (
+            <Card>
+              <CardContent className="flex items-center justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              </CardContent>
+            </Card>
+          )}
+        </div>
+
+        {/* Booking Summary Sidebar */}
+        <div className="md:col-span-1">
+          <Card className="sticky top-4">
+            <CardHeader>
+              <CardTitle>Booking Summary</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <h3 className="font-semibold mb-2 flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  {unitName}
+                </h3>
+              </div>
+
+              <Separator />
+
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-sm">
+                  <CalendarDays className="h-4 w-4 text-muted-foreground" />
+                  <div>
+                    <div className="font-medium">
+                      {format(parseISO(checkIn), 'MMM dd')} - {format(parseISO(checkOut), 'MMM dd, yyyy')}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-sm">
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                  <span>{guests} {guests === 1 ? 'Guest' : 'Guests'}</span>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-lg font-semibold">
+                  <span>Total</span>
+                  <span className="text-primary">{formatPrice(totalCents)}</span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Includes all taxes and fees
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

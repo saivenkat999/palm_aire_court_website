@@ -1,7 +1,7 @@
-import { PrismaClient, Unit, RatePlan, Season, Fee, UnitType } from '@prisma/client';
+import { Unit, RatePlan, Season, Fee, UnitType } from '@prisma/client';
+import prisma from './prisma.js';
 import { addDays, differenceInCalendarDays, isWithinInterval, format } from 'date-fns';
 
-const prisma = new PrismaClient();
 
 export interface PricingBreakdown {
   subtotal: number;

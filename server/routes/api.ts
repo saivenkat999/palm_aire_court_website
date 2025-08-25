@@ -1,11 +1,11 @@
-import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Router, raw } from 'express';
+import prisma from '../lib/prisma.js';
 import { PricingEngine } from '../lib/pricing.js';
+import StripeService from '../lib/stripe.js';
 import { z } from 'zod';
 import { addDays } from 'date-fns';
 
 const router = Router();
-const prisma = new PrismaClient();
 
 // Validation schemas
 const dateSchema = z.string().transform((str) => new Date(str));
@@ -346,6 +346,126 @@ router.get('/fees', async (req, res) => {
   } catch (error) {
     console.error('Error fetching fees:', error);
     res.status(500).json({ error: 'Failed to fetch fees' });
+  }
+});
+
+// ============= STRIPE PAYMENT ENDPOINTS =============
+
+// POST /api/payment-intents - Create a payment intent
+router.post('/payment-intents', async (req, res) => {
+  try {
+    const { amount, bookingId, customerEmail, metadata } = req.body;
+
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ error: 'Invalid amount' });
+    }
+
+    const paymentIntent = await StripeService.createPaymentIntent({
+      amount,
+      currency: 'usd',
+      bookingId,
+      customerEmail,
+      metadata
+    });
+
+    res.json({
+      clientSecret: paymentIntent.client_secret,
+      paymentIntentId: paymentIntent.id,
+      amount: paymentIntent.amount,
+      status: paymentIntent.status
+    });
+  } catch (error) {
+    console.error('Error creating payment intent:', error);
+    res.status(500).json({ error: 'Failed to create payment intent' });
+  }
+});
+// PUT /api/payment-intents/:id - Update a payment intent
+router.put('/payment-intents/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { amount, metadata } = req.body;
+
+    const paymentIntent = await StripeService.updatePaymentIntent({
+      paymentIntentId: id,
+      amount,
+      metadata
+    });
+
+    res.json({
+      paymentIntentId: paymentIntent.id,
+      amount: paymentIntent.amount,
+      status: paymentIntent.status
+    });
+  } catch (error) {
+    console.error('Error updating payment intent:', error);
+    res.status(500).json({ error: 'Failed to update payment intent' });
+  }
+});
+
+// GET /api/payment-intents/:id - Get payment intent status
+router.get('/payment-intents/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const paymentIntent = await StripeService.getPaymentIntent(id);
+
+    res.json({
+      paymentIntentId: paymentIntent.id,
+      amount: paymentIntent.amount,
+      status: paymentIntent.status,
+      metadata: paymentIntent.metadata
+    });
+  } catch (error) {
+    console.error('Error fetching payment intent:', error);
+    res.status(500).json({ error: 'Failed to fetch payment intent' });
+  }
+});
+
+// POST /api/payment-intents/:id/cancel - Cancel a payment intent
+router.post('/payment-intents/:id/cancel', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const paymentIntent = await StripeService.cancelPaymentIntent(id);
+
+    res.json({
+      paymentIntentId: paymentIntent.id,
+      status: paymentIntent.status
+    });
+  } catch (error) {
+    console.error('Error canceling payment intent:', error);
+    res.status(500).json({ error: 'Failed to cancel payment intent' });
+  }
+});
+
+// GET /api/stripe-config - Get Stripe publishable key
+router.get('/stripe-config', (req, res) => {
+  res.json({
+    publishableKey: StripeService.getPublishableKey()
+  });
+});
+
+// POST /api/stripe-webhook - Handle Stripe webhooks
+router.post('/stripe-webhook', raw({ type: 'application/json' }), async (req, res) => {
+  try {
+    const signature = req.headers['stripe-signature'] as string;
+    
+    if (!signature) {
+      return res.status(400).json({ error: 'Missing stripe signature' });
+    }
+
+    const result = await StripeService.handleWebhook(req.body, signature);
+    
+    res.json(result);
+  } catch (error: any) {
+    console.error('Webhook error:', error);
+    
+    // Return 200 to acknowledge receipt even if processing failed
+    // to prevent Stripe from retrying
+    res.status(200).json({ 
+      success: false, 
+      error: error.message || 'Webhook processing failed' 
+    });
   }
 });
 

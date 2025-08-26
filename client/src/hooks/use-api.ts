@@ -1,6 +1,19 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 
+export interface RatePlan {
+  id: string;
+  unitId?: string;
+  category?: string;
+  nightly?: number;
+  weekly?: number;
+  monthly?: number;
+  fourMonth?: number;
+  currency: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Unit {
   id: string;
   slug: string;
@@ -15,7 +28,7 @@ export interface Unit {
   active: boolean;
   createdAt: string;
   updatedAt: string;
-  ratePlans: any[];
+  ratePlans: RatePlan[];
 }
 
 export interface PricingBreakdown {
@@ -35,7 +48,8 @@ export interface AvailabilityResult {
 }
 
 export interface BookingData {
-  unitId: string;
+  unitId?: string;
+  unitType?: string;
   checkIn: string;
   checkOut: string;
   guests: number;

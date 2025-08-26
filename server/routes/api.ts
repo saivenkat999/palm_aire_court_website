@@ -16,6 +16,13 @@ const pricingQuerySchema = z.object({
   guests: z.coerce.number().min(1).optional().default(1)
 });
 
+const unitTypePricingSchema = z.object({
+  unitType: z.enum(['TRAILER', 'COTTAGE_1BR', 'COTTAGE_2BR', 'RV_SITE']),
+  checkIn: dateSchema,
+  checkOut: dateSchema,
+  guests: z.coerce.number().min(1).optional().default(1)
+});
+
 const availabilityQuerySchema = z.object({
   unitId: z.string().min(1),
   checkIn: dateSchema,
@@ -31,7 +38,8 @@ const holdCreateSchema = z.object({
 
 const bookingCreateSchema = z.object({
   holdId: z.string().min(1).optional(),
-  unitId: z.string().min(1),
+  unitId: z.string().min(1).optional(),
+  unitType: z.enum(['TRAILER', 'COTTAGE_1BR', 'COTTAGE_2BR', 'RV_SITE']).optional(),
   checkIn: dateSchema,
   checkOut: dateSchema,
   guests: z.number().min(1),
@@ -40,6 +48,8 @@ const bookingCreateSchema = z.object({
   guestPhone: z.string().min(10),
   specialRequests: z.string().optional(),
   stripePaymentIntentId: z.string().optional()
+}).refine(data => data.unitId || data.unitType, {
+  message: "Either unitId or unitType must be provided"
 });
 
 // GET /api/units - Get all units
@@ -61,7 +71,25 @@ router.get('/units', async (req, res) => {
       orderBy: { name: 'asc' }
     });
 
-    res.json(units);
+    // For units without specific rate plans, add category-wide rate plans
+    const unitsWithRates = await Promise.all(units.map(async (unit) => {
+      if (unit.ratePlans.length === 0) {
+        // Look for category-wide rate plans
+        const categoryRatePlans = await prisma.ratePlan.findMany({
+          where: {
+            category: unit.type,
+            unitId: null
+          }
+        });
+        return {
+          ...unit,
+          ratePlans: categoryRatePlans
+        };
+      }
+      return unit;
+    }));
+
+    res.json(unitsWithRates);
   } catch (error) {
     console.error('Error fetching units:', error);
     res.status(500).json({ error: 'Failed to fetch units' });
@@ -84,6 +112,17 @@ router.get('/units/:slug', async (req, res) => {
       return res.status(404).json({ error: 'Unit not found' });
     }
 
+    // If no specific rate plans, add category-wide rate plans
+    if (unit.ratePlans.length === 0) {
+      const categoryRatePlans = await prisma.ratePlan.findMany({
+        where: {
+          category: unit.type,
+          unitId: null
+        }
+      });
+      unit.ratePlans = categoryRatePlans;
+    }
+
     res.json(unit);
   } catch (error) {
     console.error('Error fetching unit:', error);
@@ -101,6 +140,48 @@ router.get('/pricing', async (req, res) => {
     res.json(pricing);
   } catch (error) {
     console.error('Error calculating pricing:', error);
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: 'Invalid query parameters', details: error.errors });
+    }
+    res.status(500).json({ error: error instanceof Error ? error.message : 'Failed to calculate pricing' });
+  }
+});
+
+// GET /api/pricing/type - Calculate pricing for any available unit of a specific type
+router.get('/pricing/type', async (req, res) => {
+  try {
+    const { unitType, checkIn, checkOut, guests } = unitTypePricingSchema.parse(req.query);
+
+    // Find any available unit of the requested type
+    const availableUnits = await prisma.unit.findMany({
+      where: {
+        type: unitType,
+        active: true
+      }
+    });
+
+    if (availableUnits.length === 0) {
+      return res.status(404).json({ error: 'No units of this type are available' });
+    }
+
+    // Check availability and get pricing for the first available unit
+    let pricing = null;
+    for (const unit of availableUnits) {
+      const availability = await PricingEngine.checkAvailability(unit.id, checkIn, checkOut);
+      
+      if (availability.available) {
+        pricing = await PricingEngine.calculatePricing(unit.id, checkIn, checkOut, guests);
+        break;
+      }
+    }
+
+    if (!pricing) {
+      return res.status(400).json({ error: 'No units of this type are available for the selected dates' });
+    }
+
+    res.json(pricing);
+  } catch (error) {
+    console.error('Error calculating pricing for unit type:', error);
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: 'Invalid query parameters', details: error.errors });
     }
@@ -178,6 +259,46 @@ router.delete('/holds/:holdId', async (req, res) => {
 router.post('/bookings', async (req, res) => {
   try {
     const bookingData = bookingCreateSchema.parse(req.body);
+    let finalUnitId: string;
+
+    // If unitType is provided instead of unitId, find an available unit of that type
+    if (bookingData.unitType && !bookingData.unitId) {
+      const availableUnits = await prisma.unit.findMany({
+        where: {
+          type: bookingData.unitType,
+          active: true
+        }
+      });
+
+      if (availableUnits.length === 0) {
+        return res.status(400).json({ error: 'No units of this type are available' });
+      }
+
+      // Check availability for each unit of the requested type
+      let foundAvailableUnit = null;
+      for (const unit of availableUnits) {
+        const availability = await PricingEngine.checkAvailability(
+          unit.id,
+          bookingData.checkIn,
+          bookingData.checkOut
+        );
+
+        if (availability.available) {
+          foundAvailableUnit = unit;
+          break;
+        }
+      }
+
+      if (!foundAvailableUnit) {
+        return res.status(400).json({ error: 'No units of this type are available for the selected dates' });
+      }
+
+      finalUnitId = foundAvailableUnit.id;
+    } else if (bookingData.unitId) {
+      finalUnitId = bookingData.unitId;
+    } else {
+      return res.status(400).json({ error: 'Either unitId or unitType must be provided' });
+    }
 
     // If holdId is provided, verify it exists and release it
     if (bookingData.holdId) {
@@ -194,16 +315,16 @@ router.post('/bookings', async (req, res) => {
       }
 
       // Verify hold matches booking data
-      if (hold.unitId !== bookingData.unitId || 
+      if (hold.unitId !== finalUnitId || 
           hold.checkIn.getTime() !== bookingData.checkIn.getTime() ||
           hold.checkOut.getTime() !== bookingData.checkOut.getTime()) {
         return res.status(400).json({ error: 'Hold does not match booking data' });
       }
     }
 
-    // Double-check availability
+    // Double-check availability for the final unit
     const availability = await PricingEngine.checkAvailability(
-      bookingData.unitId, 
+      finalUnitId, 
       bookingData.checkIn, 
       bookingData.checkOut
     );
@@ -214,7 +335,7 @@ router.post('/bookings', async (req, res) => {
 
     // Calculate final pricing
     const pricing = await PricingEngine.calculatePricing(
-      bookingData.unitId,
+      finalUnitId,
       bookingData.checkIn,
       bookingData.checkOut,
       bookingData.guests
@@ -239,7 +360,7 @@ router.post('/bookings', async (req, res) => {
     // Create the booking
     const booking = await prisma.booking.create({
       data: {
-        unitId: bookingData.unitId,
+        unitId: finalUnitId,
         customerId: customer.id,
         checkIn: bookingData.checkIn,
         checkOut: bookingData.checkOut,

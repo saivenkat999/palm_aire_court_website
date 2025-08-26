@@ -20,6 +20,22 @@ export default function UnitCard({ unit }: UnitCardProps) {
     return `Sleeps ${unit.capacity} • ${unit.beds || 0} bed${unit.beds !== 1 ? 's' : ''} • ${unit.baths || 0} bath${unit.baths !== 1 ? 's' : ''}`;
   };
 
+  const getLowestPrice = (unit: Unit) => {
+    // Get nightly rates from rate plans
+    const nightlyRates = unit.ratePlans
+      ?.filter((plan) => plan.nightly && plan.nightly > 0)
+      .map((plan) => plan.nightly);
+    
+    if (!nightlyRates || nightlyRates.length === 0) {
+      return 'Contact for pricing';
+    }
+    
+    const lowestRate = Math.min(...nightlyRates);
+    // Convert from cents to dollars
+    const priceInDollars = (lowestRate / 100).toFixed(0);
+    return `From $${priceInDollars}/night`;
+  };
+
   return (
     <div 
       className="bg-card rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
@@ -47,7 +63,7 @@ export default function UnitCard({ unit }: UnitCardProps) {
         
         <div className="flex justify-between items-center">
           <span className="font-bold text-primary" data-testid={`unit-price-${unit.slug}`}>
-            From $45/night
+            {getLowestPrice(unit)}
           </span>
           <Link href={`/stays/${unit.slug}`}>
             <Button 

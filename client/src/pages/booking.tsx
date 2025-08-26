@@ -31,22 +31,37 @@ type BookingStep = 'details' | 'payment' | 'confirmation';
 export default function BookingPage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const [currentStep, setCurrentStep] = useState<BookingStep>('details');
-  const [bookingData, setBookingData] = useState<BookingFormData | null>(null);
-  const [bookingId, setBookingId] = useState<string | null>(null);
-  const [paymentClientSecret, setPaymentClientSecret] = useState<string | null>(null);
-  const [stripePublishableKey, setStripePublishableKey] = useState<string>('');
   
   const { createPaymentIntent, stripe } = useStripe();
   const createBookingMutation = useCreateBooking();
+  
   // Get booking details from URL params
   const searchParams = new URLSearchParams(window.location.search);
   const unitId = searchParams.get('unitId') || '';
+  const unitType = searchParams.get('unitType') || '';
   const unitName = searchParams.get('unitName') || '';
   const checkIn = searchParams.get('checkIn') || '';
   const checkOut = searchParams.get('checkOut') || '';
   const guests = parseInt(searchParams.get('guests') || '1');
   const totalCents = parseInt(searchParams.get('total') || '0'); // Convert to cents for Stripe
+
+  // Determine if this is a pool booking (unitType provided) or specific unit booking
+  const isPoolBooking = !!unitType && !unitId;
+  const displayName = isPoolBooking ? 
+    (unitType === 'TRAILER' ? 'Any Available Trailer' :
+     unitType === 'COTTAGE_1BR' ? 'Any Available 1-Bedroom Cottage' :
+     unitType === 'COTTAGE_2BR' ? 'Any Available 2-Bedroom Cottage' :
+     unitType === 'RV_SITE' ? 'Any Available RV Site' : 'Any Available Unit') : 
+    unitName;
+
+  // State management
+  const [currentStep, setCurrentStep] = useState<BookingStep>('details');
+  const [bookingData, setBookingData] = useState<BookingFormData | null>(null);
+  const [bookingId, setBookingId] = useState<string | null>(null);
+  const [paymentClientSecret, setPaymentClientSecret] = useState<string | null>(null);
+  const [stripePublishableKey, setStripePublishableKey] = useState<string>('');
+  const [actualTotalCents, setActualTotalCents] = useState<number>(totalCents);
+  const [loadingPricing, setLoadingPricing] = useState<boolean>(false);
 
   const form = useForm<BookingFormData>({
     resolver: zodResolver(bookingFormSchema),
@@ -57,6 +72,38 @@ export default function BookingPage() {
       specialRequests: '',
     },
   });
+
+  // Fetch pricing for pool bookings
+  useEffect(() => {
+    if (isPoolBooking && unitType && checkIn && checkOut) {
+      setLoadingPricing(true);
+      const params = new URLSearchParams({
+        unitType,
+        checkIn,
+        checkOut,
+        guests: guests.toString()
+      });
+      
+      fetch(`/api/pricing/type?${params.toString()}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.total) {
+            setActualTotalCents(data.total);
+          }
+        })
+        .catch(err => {
+          console.error('Failed to fetch pricing:', err);
+          toast({
+            variant: "destructive",
+            title: "Pricing Error",
+            description: "Unable to calculate pricing. Please try again.",
+          });
+        })
+        .finally(() => {
+          setLoadingPricing(false);
+        });
+    }
+  }, [isPoolBooking, unitType, checkIn, checkOut, guests, toast]);
 
   // Fetch Stripe config on mount
   useEffect(() => {
@@ -72,7 +119,7 @@ export default function BookingPage() {
 
   // Redirect if missing essential booking data
   useEffect(() => {
-    if (!unitId || !checkIn || !checkOut || !totalCents) {
+    if ((!unitId && !unitType) || !checkIn || !checkOut) {
       toast({
         variant: "destructive",
         title: "Invalid booking data",
@@ -80,7 +127,7 @@ export default function BookingPage() {
       });
       setLocation('/stays');
     }
-  }, [unitId, checkIn, checkOut, totalCents, setLocation, toast]);
+  }, [unitId, unitType, checkIn, checkOut, setLocation, toast]);
 
   // Step 1: Handle guest details submission
   const onSubmitDetails = async (data: BookingFormData) => {
@@ -89,11 +136,12 @@ export default function BookingPage() {
       
       // Create payment intent
       const paymentData = await createPaymentIntent({
-        amount: totalCents,
+        amount: actualTotalCents,
         customerEmail: data.guestEmail,
         metadata: {
-          unitId,
-          unitName,
+          ...(unitId ? { unitId } : {}),
+          ...(unitType ? { unitType } : {}),
+          unitName: displayName,
           checkIn,
           checkOut,
           guests: guests.toString(),
@@ -125,7 +173,8 @@ export default function BookingPage() {
 
       // Create the booking in the database
       const booking = await createBookingMutation.mutateAsync({
-        unitId,
+        ...(unitId ? { unitId } : {}),
+        ...(unitType ? { unitType } : {}),
         checkIn,
         checkOut,
         guests,
@@ -145,10 +194,10 @@ export default function BookingPage() {
           bookingId: booking.id,
           guestName: bookingData.guestName,
           guestEmail: bookingData.guestEmail,
-          unitName: unitName,
+          unitName: displayName,
           checkIn,
           checkOut,
-          totalAmount: totalCents,
+          totalAmount: actualTotalCents,
           specialRequests: bookingData.specialRequests,
         });
       } catch (emailError) {
@@ -210,7 +259,7 @@ export default function BookingPage() {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Unit:</span>
-                <span>{unitName}</span>
+                <span>{displayName}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Check-in:</span>
@@ -223,7 +272,7 @@ export default function BookingPage() {
               <Separator className="my-2" />
               <div className="flex justify-between font-semibold">
                 <span>Total Paid:</span>
-                <span className="text-primary">{formatPrice(totalCents)}</span>
+                <span className="text-primary">{formatPrice(actualTotalCents)}</span>
               </div>
             </div>
             <p className="text-sm text-muted-foreground">
@@ -345,9 +394,18 @@ export default function BookingPage() {
                       )}
                     />
 
-                    <Button type="submit" className="w-full" size="lg">
-                      Continue to Payment
-                      <ChevronRight className="ml-2 h-4 w-4" />
+                    <Button type="submit" className="w-full" size="lg" disabled={loadingPricing}>
+                      {loadingPricing ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Calculating Price...
+                        </>
+                      ) : (
+                        <>
+                          Continue to Payment
+                          <ChevronRight className="ml-2 h-4 w-4" />
+                        </>
+                      )}
                     </Button>
                   </form>
                 </Form>
@@ -356,7 +414,7 @@ export default function BookingPage() {
           ) : currentStep === 'payment' && paymentClientSecret && stripePublishableKey ? (
             <PaymentForm
               clientSecret={paymentClientSecret}
-              amount={totalCents}
+              amount={actualTotalCents}
               publishableKey={stripePublishableKey}
               onSuccess={handlePaymentSuccess}
               onError={handlePaymentError}
@@ -380,7 +438,7 @@ export default function BookingPage() {
               <div>
                 <h3 className="font-semibold mb-2 flex items-center gap-2">
                   <MapPin className="h-4 w-4" />
-                  {unitName}
+                  {displayName}
                 </h3>
               </div>
 
@@ -407,7 +465,13 @@ export default function BookingPage() {
               <div className="space-y-2">
                 <div className="flex justify-between text-lg font-semibold">
                   <span>Total</span>
-                  <span className="text-primary">{formatPrice(totalCents)}</span>
+                  <span className="text-primary">
+                    {loadingPricing ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      formatPrice(actualTotalCents)
+                    )}
+                  </span>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Includes all taxes and fees

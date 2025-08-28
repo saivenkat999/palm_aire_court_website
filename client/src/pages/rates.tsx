@@ -1,20 +1,48 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Info } from 'lucide-react';
-import ratesData from '@/data/rates.json';
-import { formatCurrency } from '@/lib/pricing';
-import type { Rate } from '@/types';
+import { useUnits } from '@/hooks/use-api';
 
 export default function Rates() {
-  const rates = ratesData as Rate[];
+  const { data: units = [], isLoading } = useUnits();
+
+  // Extract unique rate plans from units
+  const ratePlans = units.reduce((acc: any[], unit) => {
+    unit.ratePlans?.forEach(plan => {
+      if (plan.category && !acc.find(existing => existing.category === plan.category)) {
+        acc.push(plan);
+      }
+    });
+    return acc;
+  }, []);
 
   const categoryLabels: Record<string, string> = {
-    'trailer': 'Trailers',
-    'cottage-1br': '1-Bedroom Cottages',
-    'cottage-2br': '2-Bedroom Cottages',
-    'cottage-2br-premium': '2-Bedroom Premium Cottages',
-    'rv-site': 'RV Sites',
+    'TRAILER': 'Trailers',
+    'COTTAGE_1BR': '1-Bedroom Cottages', 
+    'COTTAGE_2BR': '2-Bedroom Cottages',
+    'RV_SITE': 'RV Sites',
   };
+
+  const formatCurrency = (cents: number | null | undefined) => {
+    if (!cents) return 'Contact us';
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(cents / 100);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p>Loading rates...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background py-8" data-testid="rates-page">
@@ -31,48 +59,47 @@ export default function Rates() {
 
         {/* Rate Cards */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {rates.map((rate) => (
-            <Card key={rate.category} className="shadow-lg" data-testid={`rate-card-${rate.category}`}>
+          {ratePlans.map((plan: any) => (
+            <Card key={plan.category} className="shadow-lg" data-testid={`rate-card-${plan.category}`}>
               <CardHeader>
                 <CardTitle className="text-xl">
-                  {categoryLabels[rate.category] || rate.category}
+                  {categoryLabels[plan.category] || plan.category}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <span className="text-muted-foreground">Nightly</span>
-                    <p className="font-semibold text-lg">{formatCurrency(rate.nightly)}</p>
+                    <p className="font-semibold text-lg">{formatCurrency(plan.nightly)}</p>
                   </div>
                   <div>
                     <span className="text-muted-foreground">Weekly</span>
-                    <p className="font-semibold text-lg">{formatCurrency(rate.weekly)}</p>
-                    <Badge variant="secondary" className="text-xs">
-                      Save {Math.round((1 - (rate.weekly / (rate.nightly * 7))) * 100)}%
-                    </Badge>
+                    <p className="font-semibold text-lg">{formatCurrency(plan.weekly)}</p>
+                    {plan.weekly && plan.nightly && (
+                      <Badge variant="secondary" className="text-xs">
+                        Save {Math.round((1 - (plan.weekly / (plan.nightly * 7))) * 100)}%
+                      </Badge>
+                    )}
                   </div>
                   <div>
                     <span className="text-muted-foreground">Monthly</span>
-                    <p className="font-semibold text-lg">{formatCurrency(rate.monthly)}</p>
-                    <Badge variant="secondary" className="text-xs">
-                      Save {Math.round((1 - (rate.monthly / (rate.nightly * 30))) * 100)}%
-                    </Badge>
+                    <p className="font-semibold text-lg">{formatCurrency(plan.monthly)}</p>
+                    {plan.monthly && plan.nightly && (
+                      <Badge variant="secondary" className="text-xs">
+                        Save {Math.round((1 - (plan.monthly / (plan.nightly * 30))) * 100)}%
+                      </Badge>
+                    )}
                   </div>
                   <div>
                     <span className="text-muted-foreground">4-Month</span>
-                    <p className="font-semibold text-lg">{formatCurrency(rate.fourMonth)}</p>
-                    <Badge variant="secondary" className="text-xs">
-                      Save {Math.round((1 - (rate.fourMonth / (rate.nightly * 120))) * 100)}%
-                    </Badge>
+                    <p className="font-semibold text-lg">{formatCurrency(plan.fourMonth)}</p>
+                    {plan.fourMonth && plan.nightly && (
+                      <Badge variant="secondary" className="text-xs">
+                        Save {Math.round((1 - (plan.fourMonth / (plan.nightly * 120))) * 100)}%
+                      </Badge>
+                    )}
                   </div>
                 </div>
-                
-                {rate.cleaningFee > 0 && (
-                  <div className="border-t pt-4">
-                    <span className="text-muted-foreground text-sm">Cleaning Fee (one-time)</span>
-                    <p className="font-semibold">{formatCurrency(rate.cleaningFee)}</p>
-                  </div>
-                )}
               </CardContent>
             </Card>
           ))}

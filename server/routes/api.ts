@@ -590,4 +590,150 @@ router.post('/stripe-webhook', raw({ type: 'application/json' }), async (req, re
   }
 });
 
+// ============= GOHIGHLEVEL INTEGRATION =============
+
+const contactCreateSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().email('Please enter a valid email address'),
+  phone: z.string().min(10, 'Please enter a valid phone number'),
+  message: z.string().min(10, 'Message must be at least 10 characters'),
+  preferredDates: z.string().optional().nullable(),
+  unitId: z.string().optional().nullable(),
+  checkIn: z.string().optional().nullable(),
+  checkOut: z.string().optional().nullable(),
+  guests: z.string().optional().nullable(),
+  bookingDetails: z.object({
+    checkIn: z.string(),
+    checkOut: z.string(),
+    guests: z.string(),
+  }).optional().nullable(),
+  timestamp: z.string().optional(),
+});
+
+// POST /api/contacts/gohighlevel - Create contact in GoHighLevel
+router.post('/contacts/gohighlevel', async (req, res) => {
+  try {
+    console.log('Received contact data:', req.body);
+    const data = contactCreateSchema.parse(req.body);
+    console.log('Parsed contact data:', data);
+    
+    const API_KEY = process.env.GHL_API_KEY;
+    if (!API_KEY) {
+      return res.status(500).json({ error: 'GoHighLevel API key not configured' });
+    }
+    
+    // Try different potential GoHighLevel API endpoints
+    const endpoints = [
+      'https://rest.gohighlevel.com/v1/contacts/',
+      'https://services.leadconnectorhq.com/contacts/',
+      'https://api.gohighlevel.com/v1/contacts/'
+    ];
+
+    const contactData = {
+      firstName: data.name.split(' ')[0],
+      lastName: data.name.split(' ').slice(1).join(' ') || '',
+      email: data.email,
+      phone: data.phone,
+      source: 'Website Contact Form',
+      // Try both customFields array and direct field approach
+      customFields: {
+        preferred_dates: data.preferredDates || '',
+        message: data.message,
+        unit_inquiry: data.unitId || '',
+        check_in: data.checkIn || '',
+        check_out: data.checkOut || '',
+        guests: data.guests || '',
+        website_source: 'Palm Aire Court Contact Form'
+      },
+      // Also try the array format
+      customField: [
+        {
+          key: 'preferred_dates',
+          field_value: data.preferredDates || ''
+        },
+        {
+          key: 'message',
+          field_value: data.message
+        },
+        {
+          key: 'unit_inquiry',
+          field_value: data.unitId || ''
+        },
+        {
+          key: 'source',
+          field_value: 'Website Contact Form'
+        }
+      ],
+      // Add as notes as fallback
+      notes: `Contact Form Submission:
+Message: ${data.message}
+Preferred Dates: ${data.preferredDates || 'Not specified'}
+Unit Interest: ${data.unitId || 'General inquiry'}
+Source: Website Contact Form
+Timestamp: ${data.timestamp}`
+    };
+
+    let lastError = null;
+    let successResult = null;
+    
+    for (const endpoint of endpoints) {
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(contactData),
+        });
+
+        if (response.ok) {
+          successResult = await response.json();
+          console.log(`Contact created successfully in GoHighLevel via ${endpoint}:`, successResult);
+          break;
+        } else {
+          const errorText = await response.text();
+          console.log(`Failed with endpoint ${endpoint}:`, response.status, errorText);
+          lastError = { endpoint, status: response.status, error: errorText };
+        }
+      } catch (error) {
+        console.log(`Error with endpoint ${endpoint}:`, error);
+        lastError = { 
+          endpoint, 
+          error: error instanceof Error ? error.message : String(error) 
+        };
+      }
+    }
+    
+    if (successResult) {
+      res.json({ 
+        success: true, 
+        data: successResult,
+        message: 'Contact created successfully in GoHighLevel'
+      });
+    } else {
+      console.error('All GoHighLevel endpoints failed:', lastError);
+      res.status(500).json({ 
+        success: false, 
+        error: 'Failed to create contact in GoHighLevel',
+        details: lastError
+      });
+    }
+    
+  } catch (error) {
+    console.error('Error in GoHighLevel contact creation:', error);
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Invalid contact data', 
+        details: error.errors 
+      });
+    }
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to process contact creation' 
+    });
+  }
+});
+
 export default router;

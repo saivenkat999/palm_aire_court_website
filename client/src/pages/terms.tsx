@@ -103,31 +103,30 @@ export default function Terms() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-muted-foreground">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-semibold text-foreground mb-2">Short-term Stays (1-6 nights)</h4>
-                <ul className="space-y-1 text-sm">
-                  <li>• 7+ days before arrival: Full refund minus processing fee</li>
-                  <li>• 3-6 days before arrival: 50% refund</li>
-                  <li>• Less than 3 days: No refund</li>
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold text-foreground mb-2">Extended Stays (7+ nights)</h4>
-                <ul className="space-y-1 text-sm">
-                  <li>• 14+ days before arrival: Full refund minus processing fee</li>
-                  <li>• 7-13 days before arrival: 75% refund</li>
-                  <li>• Less than 7 days: One night charge</li>
-                </ul>
-              </div>
-            </div>
+            <ul className="space-y-3 text-sm">
+              <li className="flex items-start">
+                <span className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                <span>Cancellations made before 10 days of arrival are refundable minus a $25 fee.</span>
+              </li>
+              <li className="flex items-start">
+                <span className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                <span>Cancellations within 10 days of arrival will be charged one night's stay.</span>
+              </li>
+              <li className="flex items-start">
+                <span className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                <span>All cancellations or changes must be made by phone or in person (no email cancellations).</span>
+              </li>
+              <li className="flex items-start">
+                <span className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                <span>No refunds for early departures.</span>
+              </li>
+            </ul>
             
-            <div className="bg-muted p-4 rounded-lg">
+            <div className="bg-muted p-4 rounded-lg mt-4">
               <p className="text-sm">
-                <strong>Emergency Situations:</strong> Cancellations due to medical emergencies 
-                or family crises may be considered for partial refund on a case-by-case basis 
-                with appropriate documentation.
+                <strong>Contact Information:</strong> For all cancellations or changes, please contact us at 
+                480-993-8431 or visit us in person at 9616 N 12th St, Phoenix, AZ 85020. Email cancellations 
+                will not be accepted.
               </p>
             </div>
           </CardContent>

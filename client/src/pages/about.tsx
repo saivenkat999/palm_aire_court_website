@@ -90,7 +90,7 @@ export default function About() {
             
             <div>
               <img
-                src="https://placehold.co/600x400/E07A5F/ffffff?text=Palm+Aire+Court+Community+View"
+                src="/assets/cottage/exterior.webp"
                 alt="Palm Aire Court community overview showing accommodations and desert landscape"
                 className="rounded-xl shadow-lg w-full"
               />

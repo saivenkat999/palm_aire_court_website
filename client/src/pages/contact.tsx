@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -53,26 +53,41 @@ export default function Contact() {
     },
   });
 
-  const onSubmit = async (data: ContactFormData) => {
+  // Submit form to our server API which handles GoHighLevel integration
+    const onSubmit = async (data: ContactFormData) => {
     try {
-      // In production, this would make an API call
-      console.log('Form submission (demo):', {
-        ...data,
-        unitId,
-        bookingDetails: unitId ? { checkIn, checkOut, guests } : null,
-        timestamp: new Date().toISOString(),
+      // Send data to our server API which will forward to GoHighLevel
+      const response = await fetch('/api/contacts/gohighlevel', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          message: data.message,
+          preferredDates: data.preferredDates,
+          unitId,
+          bookingDetails: unitId ? { checkIn, checkOut, guests } : null,
+          timestamp: new Date().toISOString(),
+        }),
       });
 
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const result = await response.json();
 
-      setIsSubmitted(true);
-      
-      toast({
-        title: "Message sent successfully!",
-        description: "We'll get back to you within 24 hours.",
-      });
+      if (result.success) {
+        setIsSubmitted(true);
+        
+        toast({
+          title: "Message sent successfully!",
+          description: "We'll get back to you within 24 hours.",
+        });
+      } else {
+        throw new Error(result.error || 'Failed to send message');
+      }
     } catch (error) {
+      console.error('Form submission error:', error);
       toast({
         variant: "destructive",
         title: "Error sending message",
@@ -192,16 +207,30 @@ export default function Contact() {
             {/* Map Placeholder */}
             <Card data-testid="location-map">
               <CardContent className="pt-6">
-                <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                  <img
-                    src="https://placehold.co/500x300/E07A5F/ffffff?text=Interactive+Map+Coming+Soon"
-                    alt="Map showing Palm Aire Court location in Phoenix, AZ"
-                    className="w-full h-full object-cover rounded-lg"
-                  />
+                <div className="aspect-video bg-white rounded-lg overflow-hidden">
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3320.8174167891643!2d-112.05879668431856!3d33.64736798068772!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x872b734b2b1b1b1b%3A0x1234567890abcdef!2s9616%20N%2012th%20St%2C%20Phoenix%2C%20AZ%2085020!5e0!3m2!1sen!2sus!4v1234567890123"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0, minHeight: '300px' }}
+                    allowFullScreen={true}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Palm Aire Court Location"
+                  ></iframe>
                 </div>
-                <p className="text-sm text-muted-foreground text-center mt-2">
-                  Interactive map integration coming soon
-                </p>
+                <div className="text-center mt-4">
+                  <p className="text-sm text-muted-foreground mb-2">9616 N 12th St, Phoenix, AZ 85020</p>
+                  <a 
+                    href="https://maps.google.com/?q=9616+N+12th+St,+Phoenix,+AZ+85020"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
+                  >
+                    <MapPin className="w-4 h-4 mr-2" />
+                    Get Directions
+                  </a>
+                </div>
               </CardContent>
             </Card>
           </div>

@@ -7,7 +7,7 @@ export default function Hero() {
       <div 
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: "url('https://placehold.co/1920x1080/E07A5F/ffffff?text=Desert+RV+Park+Landscape')"
+          backgroundImage: "url('/assets/cottage/exterior.webp')"
         }}
       />
       <div className="absolute inset-0 hero-gradient" />

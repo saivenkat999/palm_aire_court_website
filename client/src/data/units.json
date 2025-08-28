@@ -1,18 +1,156 @@
 [
   {
-    "id": "essex",
-    "slug": "essex",
-    "name": "Essex Cottage",
+    "id": "cottage-9606",
+    "slug": "cottage-9606",
+    "name": "Cottage 9606",
     "type": "cottage-2br",
+    "category": "cottage",
+    "capacity": 4,
+    "beds": 2,
+    "baths": 2,
+    "description": "Cottage 9606 offers spacious two-bedroom, two-bathroom accommodations with modern amenities. Perfect for families or groups seeking comfortable desert lodging with full kitchen and living space.",
+    "images": [
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Cottage+9606+Living+Area",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Cottage+9606+Master+Bedroom",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Cottage+9606+Kitchen",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Cottage+9606+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "full-kitchen",
+      "ro-water",
+      "laundry-nearby",
+      "patio",
+      "two-bathrooms"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 4 guests"
+    ],
+    "rateCategory": "cottage-2br"
+  },
+  {
+    "id": "cottage-9608",
+    "slug": "cottage-9608",
+    "name": "Cottage 9608 (Studio)",
+    "type": "cottage-studio",
+    "category": "cottage",
+    "capacity": 2,
+    "beds": 0,
+    "baths": 1,
+    "description": "Cottage 9608 is a cozy studio unit perfect for couples or solo travelers. This efficient space includes a kitchenette, comfortable sleeping area, and all essential amenities.",
+    "images": [
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Cottage+9608+Studio+Living",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Cottage+9608+Sleeping+Area",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Cottage+9608+Kitchenette",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Cottage+9608+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "kitchenette",
+      "ro-water",
+      "laundry-nearby",
+      "patio"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "cottage-studio"
+  },
+  {
+    "id": "cottage-9612",
+    "slug": "cottage-9612",
+    "name": "Cottage 9612",
+    "type": "cottage-1br",
+    "category": "cottage",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "Cottage 9612 provides comfortable one-bedroom accommodations with full kitchen and living area. Ideal for couples seeking a peaceful desert retreat with modern conveniences.",
+    "images": [
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Cottage+9612+Living+Room",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Cottage+9612+Bedroom",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Cottage+9612+Kitchen",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Cottage+9612+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "full-kitchen",
+      "ro-water",
+      "laundry-nearby",
+      "patio"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "cottage-1br"
+  },
+  {
+    "id": "cottage-9614",
+    "slug": "cottage-9614",
+    "name": "Cottage 9614 (Coming Soon)",
+    "type": "cottage-1br",
+    "category": "cottage",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "status": "coming-soon",
+    "description": "Cottage 9614 is currently being remodeled and will be available soon. This one-bedroom unit will feature updated amenities and modern conveniences. Check back for availability updates.",
+    "images": [
+      "https://placehold.co/1200x800/CCCCCC/666666?text=Cottage+9614+Coming+Soon",
+      "https://placehold.co/1200x800/CCCCCC/666666?text=Under+Renovation",
+      "https://placehold.co/1200x800/CCCCCC/666666?text=Available+Soon",
+      "https://placehold.co/1200x800/CCCCCC/666666?text=Updates+In+Progress"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "full-kitchen",
+      "ro-water",
+      "laundry-nearby",
+      "patio"
+    ],
+    "policies": [
+      "Unit currently under renovation",
+      "Availability coming soon",
+      "Contact us for updates"
+    ],
+    "rateCategory": "cottage-1br"
+  },
+  {
+    "id": "cottage-9618",
+    "slug": "cottage-9618",
+    "name": "Cottage 9618",
+    "type": "cottage-2br",
+    "category": "cottage",
     "capacity": 4,
     "beds": 2,
     "baths": 1,
-    "description": "The Essex Cottage offers comfortable accommodations with two bedrooms, a full kitchen, and a spacious living area. Perfect for couples or small families seeking a peaceful desert retreat with modern amenities and community access.",
+    "description": "Cottage 9618 offers spacious two-bedroom accommodations with one bathroom. This comfortable unit features a full kitchen, living area, and is perfect for families or small groups.",
     "images": [
-      "https://placehold.co/1200x800/E07A5F/ffffff?text=Essex+Cottage+Living+Area",
-      "https://placehold.co/1200x800/F2CC8F/000000?text=Essex+Cottage+Master+Bedroom",
-      "https://placehold.co/1200x800/EEEAE6/000000?text=Essex+Cottage+Kitchen",
-      "https://placehold.co/1200x800/E07A5F/ffffff?text=Essex+Cottage+Exterior"
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Cottage+9618+Living+Area",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Cottage+9618+Master+Bedroom",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Cottage+9618+Second+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Cottage+9618+Kitchen"
     ],
     "amenities": [
       "wifi",
@@ -33,152 +171,20 @@
     "rateCategory": "cottage-2br"
   },
   {
-    "id": "view",
-    "slug": "view",
-    "name": "Mountain View",
-    "type": "cottage-1br",
-    "capacity": 2,
-    "beds": 1,
-    "baths": 1,
-    "description": "Mountain View offers a cozy one-bedroom retreat with stunning desert vistas. This unit features a comfortable living space, full kitchen, and private patio overlooking the beautiful Arizona landscape.",
-    "images": [
-      "https://placehold.co/1200x800/F2CC8F/000000?text=Mountain+View+Living+Room",
-      "https://placehold.co/1200x800/E07A5F/ffffff?text=Mountain+View+Bedroom",
-      "https://placehold.co/1200x800/EEEAE6/000000?text=Mountain+View+Kitchen",
-      "https://placehold.co/1200x800/F2CC8F/000000?text=Mountain+View+Patio"
-    ],
-    "amenities": [
-      "wifi",
-      "cable-tv",
-      "ac-heat",
-      "parking",
-      "full-kitchen",
-      "ro-water",
-      "mountain-view",
-      "patio"
-    ],
-    "policies": [
-      "No pets allowed",
-      "No smoking",
-      "Quiet hours 10 PM - 7 AM",
-      "Maximum occupancy: 2 guests"
-    ],
-    "rateCategory": "cottage-1br"
-  },
-  {
-    "id": "9606-2br",
-    "slug": "9606-2br",
-    "name": "Desert Rose Cottage",
-    "type": "cottage-2br",
-    "capacity": 4,
-    "beds": 2,
-    "baths": 1,
-    "description": "Desert Rose Cottage provides spacious two-bedroom accommodations with southwestern charm. Features include a modern kitchen, comfortable living area, and easy access to community amenities.",
-    "images": [
-      "https://placehold.co/1200x800/EEEAE6/000000?text=Desert+Rose+Living+Area",
-      "https://placehold.co/1200x800/E07A5F/ffffff?text=Desert+Rose+Master+Bedroom",
-      "https://placehold.co/1200x800/F2CC8F/000000?text=Desert+Rose+Second+Bedroom",
-      "https://placehold.co/1200x800/EEEAE6/000000?text=Desert+Rose+Exterior"
-    ],
-    "amenities": [
-      "wifi",
-      "cable-tv",
-      "ac-heat",
-      "parking",
-      "full-kitchen",
-      "ro-water",
-      "patio",
-      "storage"
-    ],
-    "policies": [
-      "No pets allowed",
-      "No smoking",
-      "Quiet hours 10 PM - 7 AM",
-      "Maximum occupancy: 4 guests"
-    ],
-    "rateCategory": "cottage-2br"
-  },
-  {
-    "id": "9608-1br",
-    "slug": "9608-1br",
-    "name": "Cactus Bloom Cottage",
-    "type": "cottage-1br",
-    "capacity": 2,
-    "beds": 1,
-    "baths": 1,
-    "description": "Cactus Bloom Cottage is a charming one-bedroom unit perfect for couples. This well-appointed space includes all modern conveniences while maintaining the warm, welcoming atmosphere Palm Aire Court is known for.",
-    "images": [
-      "https://placehold.co/1200x800/F2CC8F/000000?text=Cactus+Bloom+Living+Space",
-      "https://placehold.co/1200x800/E07A5F/ffffff?text=Cactus+Bloom+Bedroom",
-      "https://placehold.co/1200x800/EEEAE6/000000?text=Cactus+Bloom+Kitchen",
-      "https://placehold.co/1200x800/F2CC8F/000000?text=Cactus+Bloom+Entrance"
-    ],
-    "amenities": [
-      "wifi",
-      "cable-tv",
-      "ac-heat",
-      "parking",
-      "full-kitchen",
-      "ro-water",
-      "patio"
-    ],
-    "policies": [
-      "No pets allowed",
-      "No smoking",
-      "Quiet hours 10 PM - 7 AM",
-      "Maximum occupancy: 2 guests"
-    ],
-    "rateCategory": "cottage-1br"
-  },
-  {
-    "id": "9618-2br",
-    "slug": "9618-2br",
-    "name": "Sunset Vista Cottage",
-    "type": "cottage-2br",
-    "capacity": 6,
-    "beds": 2,
-    "baths": 2,
-    "description": "Sunset Vista Cottage offers premium two-bedroom, two-bathroom accommodations with enhanced features. This larger unit includes additional space and amenities for extended stays and larger groups.",
-    "images": [
-      "https://placehold.co/1200x800/E07A5F/ffffff?text=Sunset+Vista+Great+Room",
-      "https://placehold.co/1200x800/F2CC8F/000000?text=Sunset+Vista+Master+Suite",
-      "https://placehold.co/1200x800/EEEAE6/000000?text=Sunset+Vista+Second+Bedroom",
-      "https://placehold.co/1200x800/E07A5F/ffffff?text=Sunset+Vista+Kitchen"
-    ],
-    "amenities": [
-      "wifi",
-      "cable-tv",
-      "ac-heat",
-      "parking",
-      "full-kitchen",
-      "ro-water",
-      "patio",
-      "storage",
-      "two-bathrooms",
-      "washer-dryer"
-    ],
-    "policies": [
-      "No pets allowed",
-      "No smoking",
-      "Quiet hours 10 PM - 7 AM",
-      "Maximum occupancy: 6 guests"
-    ],
-    "rateCategory": "cottage-2br-premium"
-  },
-  {
-    "id": "trailer-example",
-    "slug": "trailer-example",
-    "name": "Desert Breeze Trailer",
+    "id": "trailer-03",
+    "slug": "trailer-03",
+    "name": "5th Wheel Trailer #3",
     "type": "trailer",
+    "category": "trailer",
     "capacity": 2,
     "beds": 1,
     "baths": 1,
-    "description": "Desert Breeze Trailer provides comfortable, affordable accommodations for budget-conscious travelers. This well-maintained unit includes essential amenities and access to all community facilities.",
+    "description": "5th Wheel Trailer #3 provides comfortable, affordable accommodations in a well-maintained mobile unit. Features essential amenities and access to all community facilities.",
     "images": [
-      "https://placehold.co/1200x800/EEEAE6/000000?text=Desert+Breeze+Interior",
-      "https://placehold.co/1200x800/F2CC8F/000000?text=Desert+Breeze+Sleeping+Area",
-      "https://placehold.co/1200x800/E07A5F/ffffff?text=Desert+Breeze+Kitchenette",
-      "https://placehold.co/1200x800/EEEAE6/000000?text=Desert+Breeze+Exterior"
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+3+Interior",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Trailer+3+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Trailer+3+Kitchen",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+3+Exterior"
     ],
     "amenities": [
       "wifi",
@@ -186,7 +192,8 @@
       "ac-heat",
       "parking",
       "kitchenette",
-      "ro-water"
+      "ro-water",
+      "laundry-nearby"
     ],
     "policies": [
       "No pets allowed",
@@ -197,36 +204,531 @@
     "rateCategory": "trailer"
   },
   {
-    "id": "rv-site-example",
-    "slug": "rv-site-example",
-    "name": "Premium RV Site",
-    "type": "rv-site",
-    "capacity": 8,
-    "beds": 0,
-    "baths": 0,
-    "description": "Premium RV Site offers full hookups for your recreational vehicle. This spacious site includes 50-amp electrical service, water, sewer, and cable TV connections on a concrete pad with desert landscaping.",
+    "id": "trailer-05",
+    "slug": "trailer-05",
+    "name": "5th Wheel Trailer #5",
+    "type": "trailer",
+    "category": "trailer",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "5th Wheel Trailer #5 offers budget-friendly accommodations with all essential amenities. Perfect for travelers seeking comfortable lodging at great value.",
     "images": [
-      "https://placehold.co/1200x800/F2CC8F/000000?text=Premium+RV+Site+Overview",
-      "https://placehold.co/1200x800/E07A5F/ffffff?text=RV+Site+Hookups",
-      "https://placehold.co/1200x800/EEEAE6/000000?text=RV+Site+Landscaping",
-      "https://placehold.co/1200x800/F2CC8F/000000?text=RV+Site+Utilities"
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+5+Interior",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Trailer+5+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Trailer+5+Kitchen",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+5+Exterior"
     ],
     "amenities": [
-      "full-hookups",
-      "50-amp-electric",
-      "water-sewer",
-      "cable-tv",
       "wifi",
-      "concrete-pad",
-      "picnic-table",
-      "fire-ring"
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "kitchenette",
+      "ro-water",
+      "laundry-nearby"
     ],
     "policies": [
-      "RV length up to 45 feet",
-      "No permanent structures",
+      "No pets allowed",
+      "No smoking",
       "Quiet hours 10 PM - 7 AM",
-      "Maximum occupancy: 8 guests"
+      "Maximum occupancy: 2 guests"
     ],
-    "rateCategory": "rv-site"
+    "rateCategory": "trailer"
+  },
+  {
+    "id": "trailer-07",
+    "slug": "trailer-07",
+    "name": "5th Wheel Trailer #7",
+    "type": "trailer",
+    "category": "trailer",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "5th Wheel Trailer #7 provides comfortable mobile accommodations with modern amenities. Ideal for budget-conscious travelers and extended stays.",
+    "images": [
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+7+Interior",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Trailer+7+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Trailer+7+Kitchen",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+7+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "kitchenette",
+      "ro-water",
+      "laundry-nearby"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "trailer"
+  },
+  {
+    "id": "trailer-08",
+    "slug": "trailer-08",
+    "name": "5th Wheel Trailer #8",
+    "type": "trailer",
+    "category": "trailer",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "5th Wheel Trailer #8 offers affordable comfort with essential amenities and community access. Great choice for value-oriented accommodations.",
+    "images": [
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+8+Interior",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Trailer+8+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Trailer+8+Kitchen",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+8+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "kitchenette",
+      "ro-water",
+      "laundry-nearby"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "trailer"
+  },
+  {
+    "id": "trailer-09",
+    "slug": "trailer-09",
+    "name": "5th Wheel Trailer #9",
+    "type": "trailer",
+    "category": "trailer",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "5th Wheel Trailer #9 provides reliable accommodations with all necessary amenities. Perfect for travelers seeking comfort and affordability.",
+    "images": [
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+9+Interior",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Trailer+9+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Trailer+9+Kitchen",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+9+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "kitchenette",
+      "ro-water",
+      "laundry-nearby"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "trailer"
+  },
+  {
+    "id": "trailer-10",
+    "slug": "trailer-10",
+    "name": "5th Wheel Trailer #10",
+    "type": "trailer",
+    "category": "trailer",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "5th Wheel Trailer #10 offers comfortable mobile accommodations with modern conveniences. Great for budget travelers and extended stays.",
+    "images": [
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+10+Interior",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Trailer+10+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Trailer+10+Kitchen",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+10+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "kitchenette",
+      "ro-water",
+      "laundry-nearby"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "trailer"
+  },
+  {
+    "id": "trailer-12",
+    "slug": "trailer-12",
+    "name": "5th Wheel Trailer #12",
+    "type": "trailer",
+    "category": "trailer",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "5th Wheel Trailer #12 provides affordable comfort with essential amenities and community facility access. Perfect for value-conscious travelers.",
+    "images": [
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+12+Interior",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Trailer+12+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Trailer+12+Kitchen",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+12+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "kitchenette",
+      "ro-water",
+      "laundry-nearby"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "trailer"
+  },
+  {
+    "id": "trailer-14",
+    "slug": "trailer-14",
+    "name": "5th Wheel Trailer #14",
+    "type": "trailer",
+    "category": "trailer",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "5th Wheel Trailer #14 offers reliable accommodations with modern amenities. Great choice for travelers seeking comfortable, budget-friendly lodging.",
+    "images": [
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+14+Interior",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Trailer+14+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Trailer+14+Kitchen",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+14+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "kitchenette",
+      "ro-water",
+      "laundry-nearby"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "trailer"
+  },
+  {
+    "id": "trailer-18",
+    "slug": "trailer-18",
+    "name": "5th Wheel Trailer #18",
+    "type": "trailer",
+    "category": "trailer",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "5th Wheel Trailer #18 provides comfortable mobile accommodations with all essential amenities. Perfect for extended stays and budget-conscious travelers.",
+    "images": [
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+18+Interior",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Trailer+18+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Trailer+18+Kitchen",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+18+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "kitchenette",
+      "ro-water",
+      "laundry-nearby"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "trailer"
+  },
+  {
+    "id": "trailer-20",
+    "slug": "trailer-20",
+    "name": "5th Wheel Trailer #20",
+    "type": "trailer",
+    "category": "trailer",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "5th Wheel Trailer #20 offers affordable comfort with modern conveniences and community access. Great for value-oriented accommodations.",
+    "images": [
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+20+Interior",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Trailer+20+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Trailer+20+Kitchen",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+20+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "kitchenette",
+      "ro-water",
+      "laundry-nearby"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "trailer"
+  },
+  {
+    "id": "trailer-21",
+    "slug": "trailer-21",
+    "name": "5th Wheel Trailer #21",
+    "type": "trailer",
+    "category": "trailer",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "5th Wheel Trailer #21 provides reliable mobile accommodations with essential amenities. Perfect for travelers seeking comfortable, budget-friendly lodging.",
+    "images": [
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+21+Interior",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Trailer+21+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Trailer+21+Kitchen",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+21+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "kitchenette",
+      "ro-water",
+      "laundry-nearby"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "trailer"
+  },
+  {
+    "id": "trailer-22",
+    "slug": "trailer-22",
+    "name": "5th Wheel Trailer #22",
+    "type": "trailer",
+    "category": "trailer",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "5th Wheel Trailer #22 offers comfortable accommodations with modern amenities and community facility access. Great choice for extended stays.",
+    "images": [
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+22+Interior",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Trailer+22+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Trailer+22+Kitchen",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+22+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "kitchenette",
+      "ro-water",
+      "laundry-nearby"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "trailer"
+  },
+  {
+    "id": "trailer-23",
+    "slug": "trailer-23",
+    "name": "5th Wheel Trailer #23",
+    "type": "trailer",
+    "category": "trailer",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "5th Wheel Trailer #23 provides affordable comfort with essential amenities. Perfect for budget-conscious travelers and long-term stays.",
+    "images": [
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+23+Interior",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Trailer+23+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Trailer+23+Kitchen",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+23+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "kitchenette",
+      "ro-water",
+      "laundry-nearby"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "trailer"
+  },
+  {
+    "id": "trailer-24",
+    "slug": "trailer-24",
+    "name": "5th Wheel Trailer #24",
+    "type": "trailer",
+    "category": "trailer",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "5th Wheel Trailer #24 offers reliable mobile accommodations with modern conveniences. Great for travelers seeking value and comfort.",
+    "images": [
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+24+Interior",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Trailer+24+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Trailer+24+Kitchen",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+24+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "kitchenette",
+      "ro-water",
+      "laundry-nearby"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "trailer"
+  },
+  {
+    "id": "trailer-25",
+    "slug": "trailer-25",
+    "name": "5th Wheel Trailer #25",
+    "type": "trailer",
+    "category": "trailer",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "5th Wheel Trailer #25 provides comfortable accommodations with all essential amenities and community access. Perfect for budget-friendly stays.",
+    "images": [
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+25+Interior",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Trailer+25+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Trailer+25+Kitchen",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+25+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "kitchenette",
+      "ro-water",
+      "laundry-nearby"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "trailer"
+  },
+  {
+    "id": "trailer-26",
+    "slug": "trailer-26",
+    "name": "5th Wheel Trailer #26",
+    "type": "trailer",
+    "category": "trailer",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "5th Wheel Trailer #26 offers affordable comfort with modern amenities. Great choice for extended stays and value-conscious travelers.",
+    "images": [
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+26+Interior",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Trailer+26+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Trailer+26+Kitchen",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+26+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "kitchenette",
+      "ro-water",
+      "laundry-nearby"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "trailer"
+  },
+  {
+    "id": "trailer-27",
+    "slug": "trailer-27",
+    "name": "5th Wheel Trailer #27",
+    "type": "trailer",
+    "category": "trailer",
+    "capacity": 2,
+    "beds": 1,
+    "baths": 1,
+    "description": "5th Wheel Trailer #27 provides reliable mobile accommodations with essential amenities and community facility access. Perfect for budget travelers.",
+    "images": [
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+27+Interior",
+      "https://placehold.co/1200x800/F2CC8F/000000?text=Trailer+27+Bedroom",
+      "https://placehold.co/1200x800/E07A5F/ffffff?text=Trailer+27+Kitchen",
+      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+27+Exterior"
+    ],
+    "amenities": [
+      "wifi",
+      "cable-tv",
+      "ac-heat",
+      "parking",
+      "kitchenette",
+      "ro-water",
+      "laundry-nearby"
+    ],
+    "policies": [
+      "No pets allowed",
+      "No smoking",
+      "Quiet hours 10 PM - 7 AM",
+      "Maximum occupancy: 2 guests"
+    ],
+    "rateCategory": "trailer"
   }
 ]

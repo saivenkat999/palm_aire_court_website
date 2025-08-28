@@ -322,7 +322,10 @@ Thank you for choosing Palm Aire Court!
                   <li>• Check-in time is 3:00 PM, check-out is 11:00 AM</li>
                   <li>• A confirmation email has been sent to your email address</li>
                   <li>• Please bring a valid ID for check-in</li>
-                  <li>• For changes or cancellations, contact us at least 24 hours in advance</li>
+                  <li>• Cancellations made before 10 days of arrival are refundable minus a $25 fee</li>
+                  <li>• Cancellations within 10 days of arrival will be charged one night's stay</li>
+                  <li>• All cancellations or changes must be made by phone or in person (no email cancellations)</li>
+                  <li>• No refunds for early departures</li>
                 </ul>
               </div>
             </AlertDescription>

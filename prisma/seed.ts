@@ -7,298 +7,390 @@ async function main() {
 
   // Create Units
   const units = [
+    // COTTAGES
     {
-      slug: 'essex',
-      name: 'Essex Cottage',
+      slug: 'cottage-9606',
+      name: 'Cottage 9606',
+      type: UnitType.COTTAGE_2BR,
+      capacity: 4,
+      beds: 2,
+      baths: 2,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'full-kitchen', 'ro-water', 'laundry-nearby', 'patio', 'two-bathrooms'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 4 guests'],
+      photos: [
+        '/assets/cottage/living_area.webp',
+        '/assets/cottage/master_bedroom.webp',
+        '/assets/cottage/kitchen.jpeg',
+        '/assets/cottage/exterior.webp'
+      ]
+    },
+    {
+      slug: 'cottage-9608',
+      name: 'Cottage 9608 (Studio)',
+      type: UnitType.COTTAGE_1BR,
+      capacity: 2,
+      beds: 0,
+      baths: 1,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby', 'patio'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
+      photos: [
+        '/assets/cottage/IMG_7810-800x600.webp',
+        '/assets/cottage/IMG_7811-800x600.webp',
+        '/assets/cottage/kitchen.jpeg',
+        '/assets/cottage/exterior_2.jpeg'
+      ]
+    },
+    {
+      slug: 'cottage-9612',
+      name: 'Cottage 9612',
+      type: UnitType.COTTAGE_1BR,
+      capacity: 2,
+      beds: 1,
+      baths: 1,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'full-kitchen', 'ro-water', 'laundry-nearby', 'patio'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
+      photos: [
+        '/assets/cottage/IMG_7812-800x600.webp',
+        '/assets/cottage/master_bedroom.webp',
+        '/assets/cottage/kitchen.jpeg',
+        '/assets/cottage/exterior_3.jpg'
+      ]
+    },
+    {
+      slug: 'cottage-9614',
+      name: 'Cottage 9614 (Coming Soon)',
+      type: UnitType.COTTAGE_1BR,
+      capacity: 2,
+      beds: 1,
+      baths: 1,
+      active: false,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'full-kitchen', 'ro-water', 'laundry-nearby', 'patio'],
+      features: ['Unit currently under renovation', 'Availability coming soon', 'Contact us for updates'],
+      photos: [
+        '/assets/cottage/exterior_4.jpg',
+        '/assets/cottage/living_area.webp',
+        '/assets/cottage/kitchen.jpeg',
+        '/assets/cottage/master_bedroom.webp'
+      ]
+    },
+    {
+      slug: 'cottage-9618',
+      name: 'Cottage 9618',
       type: UnitType.COTTAGE_2BR,
       capacity: 4,
       beds: 2,
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'full-kitchen', 'ro-water', 'laundry-nearby', 'patio'],
-      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 4 guests'],
       photos: [
-        'https://placehold.co/1200x800/E07A5F/ffffff?text=Essex+Cottage+Living+Area',
-        'https://placehold.co/1200x800/F2CC8F/000000?text=Essex+Cottage+Master+Bedroom',
-        'https://placehold.co/1200x800/EEEAE6/000000?text=Essex+Cottage+Kitchen',
-        'https://placehold.co/1200x800/E07A5F/ffffff?text=Essex+Cottage+Exterior'
+        '/assets/cottage/living_area.webp',
+        '/assets/cottage/master_bedroom.webp',
+        '/assets/cottage/IMG_7812-800x600.webp',
+        '/assets/cottage/exterior.webp'
       ]
     },
-    {
-      slug: 'view',
-      name: 'Mountain View',
-      type: UnitType.COTTAGE_1BR,
-      capacity: 2,
-      beds: 1,
-      baths: 1,
-      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'full-kitchen', 'ro-water', 'mountain-view', 'patio'],
-      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM'],
-      photos: [
-        'https://placehold.co/1200x800/F2CC8F/000000?text=Mountain+View+Living+Room',
-        'https://placehold.co/1200x800/E07A5F/ffffff?text=Mountain+View+Bedroom',
-        'https://placehold.co/1200x800/EEEAE6/000000?text=Mountain+View+Kitchen',
-        'https://placehold.co/1200x800/F2CC8F/000000?text=Mountain+View+Patio'
-      ]
-    },
-    {
-      slug: '9606-2br',
-      name: 'Desert Rose Cottage',
-      type: UnitType.COTTAGE_2BR,
-      capacity: 4,
-      beds: 2,
-      baths: 1,
-      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'full-kitchen', 'ro-water', 'patio', 'storage'],
-      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM'],
-      photos: [
-        'https://placehold.co/1200x800/EEEAE6/000000?text=Desert+Rose+Living+Area',
-        'https://placehold.co/1200x800/E07A5F/ffffff?text=Desert+Rose+Master+Bedroom',
-        'https://placehold.co/1200x800/F2CC8F/000000?text=Desert+Rose+Second+Bedroom',
-        'https://placehold.co/1200x800/EEEAE6/000000?text=Desert+Rose+Exterior'
-      ]
-    },
-    {
-      slug: '9608-1br',
-      name: 'Cactus Bloom Cottage',
-      type: UnitType.COTTAGE_1BR,
-      capacity: 2,
-      beds: 1,
-      baths: 1,
-      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'full-kitchen', 'ro-water', 'patio'],
-      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM'],
-      photos: [
-        'https://placehold.co/1200x800/F2CC8F/000000?text=Cactus+Bloom+Living+Space',
-        'https://placehold.co/1200x800/E07A5F/ffffff?text=Cactus+Bloom+Bedroom',
-        'https://placehold.co/1200x800/EEEAE6/000000?text=Cactus+Bloom+Kitchen',
-        'https://placehold.co/1200x800/F2CC8F/000000?text=Cactus+Bloom+Entrance'
-      ]
-    },
-    {
-      slug: '9618-2br',
-      name: 'Sunset Vista Cottage',
-      type: UnitType.COTTAGE_2BR,
-      capacity: 6,
-      beds: 2,
-      baths: 2,
-      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'full-kitchen', 'ro-water', 'patio', 'storage', 'two-bathrooms', 'washer-dryer'],
-      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM'],
-      photos: [
-        'https://placehold.co/1200x800/E07A5F/ffffff?text=Sunset+Vista+Great+Room',
-        'https://placehold.co/1200x800/F2CC8F/000000?text=Sunset+Vista+Master+Suite',
-        'https://placehold.co/1200x800/EEEAE6/000000?text=Sunset+Vista+Second+Bedroom',
-        'https://placehold.co/1200x800/E07A5F/ffffff?text=Sunset+Vista+Kitchen'
-      ]
-    },
-    {
-      slug: 'trailer-01',
-      name: 'Desert Breeze Trailer',
-      type: UnitType.TRAILER,
-      capacity: 2,
-      beds: 1,
-      baths: 1,
-      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water'],
-      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM'],
-      photos: [
-        'https://placehold.co/1200x800/EEEAE6/000000?text=Desert+Breeze+Interior',
-        'https://placehold.co/1200x800/F2CC8F/000000?text=Desert+Breeze+Sleeping+Area',
-        'https://placehold.co/1200x800/E07A5F/ffffff?text=Desert+Breeze+Kitchenette',
-        'https://placehold.co/1200x800/EEEAE6/000000?text=Desert+Breeze+Exterior'
-      ]
-    },
-    {
-      slug: 'trailer-02',
-      name: 'Cactus Valley Trailer',
-      type: UnitType.TRAILER,
-      capacity: 2,
-      beds: 1,
-      baths: 1,
-      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water'],
-      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM'],
-      photos: [
-        'https://placehold.co/1200x800/F2CC8F/000000?text=Cactus+Valley+Interior',
-        'https://placehold.co/1200x800/E07A5F/ffffff?text=Cactus+Valley+Bedroom',
-        'https://placehold.co/1200x800/EEEAE6/000000?text=Cactus+Valley+Kitchen',
-        'https://placehold.co/1200x800/F2CC8F/000000?text=Cactus+Valley+Exterior'
-      ]
-    },
+    // 5TH WHEEL TRAILERS
     {
       slug: 'trailer-03',
-      name: 'Sunrise Trailer',
+      name: '5th Wheel Trailer #3',
       type: UnitType.TRAILER,
       capacity: 2,
       beds: 1,
       baths: 1,
-      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water'],
-      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM'],
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
       photos: [
-        'https://placehold.co/1200x800/E07A5F/ffffff?text=Sunrise+Trailer+Interior',
-        'https://placehold.co/1200x800/EEEAE6/000000?text=Sunrise+Trailer+Bedroom',
-        'https://placehold.co/1200x800/F2CC8F/000000?text=Sunrise+Trailer+Kitchen',
-        'https://placehold.co/1200x800/E07A5F/ffffff?text=Sunrise+Trailer+Exterior'
+        '/assets/Trailer/IMG_7832.jpg',
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg',
+        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg'
       ]
     },
     {
-      slug: 'rv-01',
-      name: 'Premium RV Site 1',
-      type: UnitType.RV_SITE,
-      capacity: 8,
-      beds: 0,
-      baths: 0,
-      amenities: ['full-hookups', '50-amp-electric', 'water-sewer', 'cable-tv', 'wifi', 'concrete-pad', 'picnic-table', 'fire-ring'],
-      features: ['RV length up to 45 feet', 'No permanent structures', 'Quiet hours 10 PM - 7 AM'],
+      slug: 'trailer-05',
+      name: '5th Wheel Trailer #5',
+      type: UnitType.TRAILER,
+      capacity: 2,
+      beds: 1,
+      baths: 1,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
       photos: [
-        'https://placehold.co/1200x800/F2CC8F/000000?text=Premium+RV+Site+Overview',
-        'https://placehold.co/1200x800/E07A5F/ffffff?text=RV+Site+Hookups',
-        'https://placehold.co/1200x800/EEEAE6/000000?text=RV+Site+Landscaping',
-        'https://placehold.co/1200x800/F2CC8F/000000?text=RV+Site+Utilities'
+        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg',
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg',
+        '/assets/Trailer/IMG_7832.jpg'
       ]
     },
     {
-      slug: 'rv-02',
-      name: 'Premium RV Site 2',
-      type: UnitType.RV_SITE,
-      capacity: 8,
-      beds: 0,
-      baths: 0,
-      amenities: ['full-hookups', '50-amp-electric', 'water-sewer', 'cable-tv', 'wifi', 'concrete-pad', 'picnic-table', 'fire-ring'],
-      features: ['RV length up to 45 feet', 'No permanent structures', 'Quiet hours 10 PM - 7 AM'],
+      slug: 'trailer-07',
+      name: '5th Wheel Trailer #7',
+      type: UnitType.TRAILER,
+      capacity: 2,
+      beds: 1,
+      baths: 1,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
       photos: [
-        'https://placehold.co/1200x800/E07A5F/ffffff?text=Premium+RV+Site+2+Overview',
-        'https://placehold.co/1200x800/F2CC8F/000000?text=RV+Site+2+Hookups',
-        'https://placehold.co/1200x800/EEEAE6/000000?text=RV+Site+2+Landscaping',
-        'https://placehold.co/1200x800/E07A5F/ffffff?text=RV+Site+2+Utilities'
+        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg',
+        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg',
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg'
       ]
     },
     {
-      slug: 'rv-03',
-      name: 'Premium RV Site 3',
-      type: UnitType.RV_SITE,
-      capacity: 8,
-      beds: 0,
-      baths: 0,
-      amenities: ['full-hookups', '50-amp-electric', 'water-sewer', 'cable-tv', 'wifi', 'concrete-pad', 'picnic-table', 'fire-ring'],
-      features: ['RV length up to 45 feet', 'No permanent structures', 'Quiet hours 10 PM - 7 AM'],
+      slug: 'trailer-08',
+      name: '5th Wheel Trailer #8',
+      type: UnitType.TRAILER,
+      capacity: 2,
+      beds: 1,
+      baths: 1,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
       photos: [
-        'https://placehold.co/1200x800/F2CC8F/000000?text=Premium+RV+Site+3+Overview',
-        'https://placehold.co/1200x800/EEEAE6/000000?text=RV+Site+3+Hookups',
-        'https://placehold.co/1200x800/E07A5F/ffffff?text=RV+Site+3+Landscaping',
-        'https://placehold.co/1200x800/F2CC8F/000000?text=RV+Site+3+Utilities'
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg',
+        '/assets/Trailer/IMG_7832.jpg',
+        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg'
+      ]
+    },
+    {
+      slug: 'trailer-09',
+      name: '5th Wheel Trailer #9',
+      type: UnitType.TRAILER,
+      capacity: 2,
+      beds: 1,
+      baths: 1,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
+      photos: [
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg',
+        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg',
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg'
+      ]
+    },
+    {
+      slug: 'trailer-10',
+      name: '5th Wheel Trailer #10',
+      type: UnitType.TRAILER,
+      capacity: 2,
+      beds: 1,
+      baths: 1,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
+      photos: [
+        '/assets/Trailer/IMG_7832.jpg',
+        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg',
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg'
+      ]
+    },
+    {
+      slug: 'trailer-12',
+      name: '5th Wheel Trailer #12',
+      type: UnitType.TRAILER,
+      capacity: 2,
+      beds: 1,
+      baths: 1,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
+      photos: [
+        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg',
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg',
+        '/assets/Trailer/IMG_7832.jpg'
+      ]
+    },
+    {
+      slug: 'trailer-14',
+      name: '5th Wheel Trailer #14',
+      type: UnitType.TRAILER,
+      capacity: 2,
+      beds: 1,
+      baths: 1,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
+      photos: [
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg',
+        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg',
+        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg'
+      ]
+    },
+    {
+      slug: 'trailer-18',
+      name: '5th Wheel Trailer #18',
+      type: UnitType.TRAILER,
+      capacity: 2,
+      beds: 1,
+      baths: 1,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
+      photos: [
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg',
+        '/assets/Trailer/IMG_7832.jpg',
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg'
+      ]
+    },
+    {
+      slug: 'trailer-20',
+      name: '5th Wheel Trailer #20',
+      type: UnitType.TRAILER,
+      capacity: 2,
+      beds: 1,
+      baths: 1,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
+      photos: [
+        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg',
+        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg',
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg'
+      ]
+    },
+    {
+      slug: 'trailer-21',
+      name: '5th Wheel Trailer #21',
+      type: UnitType.TRAILER,
+      capacity: 2,
+      beds: 1,
+      baths: 1,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
+      photos: [
+        '/assets/Trailer/IMG_7832.jpg',
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg',
+        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg'
+      ]
+    },
+    {
+      slug: 'trailer-22',
+      name: '5th Wheel Trailer #22',
+      type: UnitType.TRAILER,
+      capacity: 2,
+      beds: 1,
+      baths: 1,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
+      photos: [
+        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg',
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg',
+        '/assets/Trailer/IMG_7832.jpg'
+      ]
+    },
+    {
+      slug: 'trailer-23',
+      name: '5th Wheel Trailer #23',
+      type: UnitType.TRAILER,
+      capacity: 2,
+      beds: 1,
+      baths: 1,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
+      photos: [
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg',
+        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg',
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg'
+      ]
+    },
+    {
+      slug: 'trailer-24',
+      name: '5th Wheel Trailer #24',
+      type: UnitType.TRAILER,
+      capacity: 2,
+      beds: 1,
+      baths: 1,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
+      photos: [
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg',
+        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg',
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg'
+      ]
+    },
+    {
+      slug: 'trailer-25',
+      name: '5th Wheel Trailer #25',
+      type: UnitType.TRAILER,
+      capacity: 2,
+      beds: 1,
+      baths: 1,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
+      photos: [
+        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg',
+        '/assets/Trailer/IMG_7832.jpg',
+        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg'
+      ]
+    },
+    {
+      slug: 'trailer-26',
+      name: '5th Wheel Trailer #26',
+      type: UnitType.TRAILER,
+      capacity: 2,
+      beds: 1,
+      baths: 1,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
+      photos: [
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg',
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg',
+        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg'
+      ]
+    },
+    {
+      slug: 'trailer-27',
+      name: '5th Wheel Trailer #27',
+      type: UnitType.TRAILER,
+      capacity: 2,
+      beds: 1,
+      baths: 1,
+      amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
+      features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
+      photos: [
+        '/assets/Trailer/IMG_7832.jpg',
+        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg',
+        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg'
       ]
     }
   ];
 
-  // Create units
+  // Clear existing data
+  await prisma.booking.deleteMany();
+  await prisma.hold.deleteMany();
+  await prisma.ratePlan.deleteMany();
+  await prisma.unit.deleteMany();
+
+  console.log('Creating units...');
   for (const unitData of units) {
-    await prisma.unit.upsert({
-      where: { slug: unitData.slug },
-      update: {},
-      create: unitData
+    await prisma.unit.create({
+      data: unitData,
     });
   }
 
-  // Create Rate Plans (prices in cents)
+  console.log('Creating rate plans...');
+  // Create rate plans for each unit type
   const ratePlans = [
-    {
-      category: UnitType.TRAILER,
-      nightly: 4500, // $45.00
-      weekly: 28000, // $280.00
-      monthly: 100000, // $1000.00
-      fourMonth: 360000, // $3600.00
-    },
+    // Cottage rates
     {
       category: UnitType.COTTAGE_1BR,
-      nightly: 6500, // $65.00
-      weekly: 42000, // $420.00
-      monthly: 150000, // $1500.00
-      fourMonth: 540000, // $5400.00
+      nightly: 6500, // $65/night
+      weekly: 39000, // $390/week
+      monthly: 150000, // $1500/month
+      fourMonth: 560000 // $5600/4 months
     },
     {
       category: UnitType.COTTAGE_2BR,
-      nightly: 8500, // $85.00
-      weekly: 56000, // $560.00
-      monthly: 200000, // $2000.00
-      fourMonth: 720000, // $7200.00
+      nightly: 8500, // $85/night
+      weekly: 51000, // $510/week
+      monthly: 195000, // $1950/month
+      fourMonth: 728000 // $7280/4 months
     },
+    // Trailer rates
     {
-      category: UnitType.RV_SITE,
-      nightly: 4500, // $45.00
-      weekly: 28000, // $280.00
-      monthly: 100000, // $1000.00
-      fourMonth: 360000, // $3600.00
+      category: UnitType.TRAILER,
+      nightly: 4500, // $45/night
+      weekly: 27000, // $270/week
+      monthly: 100000, // $1000/month
+      fourMonth: 360000 // $3600/4 months
     }
   ];
 
-  // Special rate for premium cottage
-  const sunsetVista = await prisma.unit.findUnique({ where: { slug: '9618-2br' } });
-  if (sunsetVista) {
-    await prisma.ratePlan.create({
-      data: {
-        unitId: sunsetVista.id,
-        nightly: 10500, // $105.00
-        weekly: 70000, // $700.00
-        monthly: 250000, // $2500.00
-        fourMonth: 900000, // $9000.00
-      }
-    });
-  }
-
-  // Create category-wide rate plans
   for (const ratePlan of ratePlans) {
     await prisma.ratePlan.create({
-      data: ratePlan
-    });
-  }
-
-  // Create Seasons
-  const currentYear = new Date().getFullYear();
-  const seasons = [
-    {
-      name: 'Nov Discount',
-      startDate: new Date(currentYear, 10, 1), // November 1
-      endDate: new Date(currentYear, 10, 30), // November 30
-      discountPct: 10
-    },
-    {
-      name: 'Apr Discount',
-      startDate: new Date(currentYear, 3, 1), // April 1
-      endDate: new Date(currentYear, 3, 30), // April 30
-      discountPct: 10
-    },
-    {
-      name: 'Summer Discount',
-      startDate: new Date(currentYear, 4, 1), // May 1
-      endDate: new Date(currentYear, 9, 31), // October 31
-      discountPct: 20
-    }
-  ];
-
-  for (const season of seasons) {
-    const existing = await prisma.season.findFirst({
-      where: { name: season.name }
-    });
-    
-    if (existing) {
-      await prisma.season.update({
-        where: { id: existing.id },
-        data: season
-      });
-    } else {
-      await prisma.season.create({
-        data: season
-      });
-    }
-  }
-
-  // Create Fees
-  const existingFee = await prisma.fee.findFirst({
-    where: { name: 'Cleaning Fee' }
-  });
-  
-  if (!existingFee) {
-    await prisma.fee.create({
-      data: {
-        name: 'Cleaning Fee',
-        amount: 4000, // $40.00
-        perStay: true
-      }
+      data: ratePlan,
     });
   }
 

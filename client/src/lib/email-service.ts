@@ -99,7 +99,10 @@ IMPORTANT INFORMATION
 • Please bring a valid photo ID for check-in
 • Check-in is available from 3:00 PM onwards
 • Check-out is required by 11:00 AM
-• For any changes or cancellations, please contact us at least 24 hours in advance
+• Cancellations made before 10 days of arrival are refundable minus a $25 fee
+• Cancellations within 10 days of arrival will be charged one night's stay
+• All cancellations or changes must be made by phone or in person (no email cancellations)
+• No refunds for early departures
 
 CONTACT INFORMATION
 Phone: (555) 123-4567
@@ -152,7 +155,10 @@ The Palm Aire Court Team
             <li>Please bring a valid photo ID for check-in</li>
             <li>Check-in is available from 3:00 PM onwards</li>
             <li>Check-out is required by 11:00 AM</li>
-            <li>For any changes or cancellations, please contact us at least 24 hours in advance</li>
+            <li>Cancellations made before 10 days of arrival are refundable minus a $25 fee</li>
+            <li>Cancellations within 10 days of arrival will be charged one night's stay</li>
+            <li>All cancellations or changes must be made by phone or in person (no email cancellations)</li>
+            <li>No refunds for early departures</li>
         </ul>
         
         <h3>Contact Information</h3>

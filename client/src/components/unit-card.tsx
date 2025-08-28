@@ -42,7 +42,7 @@ export default function UnitCard({ unit }: UnitCardProps) {
       data-testid={`unit-card-${unit.slug}`}
     >
       <img
-        src={unit.photos?.[0] || '/placeholder-unit.jpg'}
+        src={unit.photos?.[0] || '/assets/cottage/exterior.webp'}
         alt={`${unit.name} exterior view`}
         className="w-full h-48 object-cover"
       />

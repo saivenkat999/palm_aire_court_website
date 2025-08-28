@@ -1,4 +1,4 @@
-import { Router, raw } from 'express';
+import { Router } from 'express';
 import prisma from '../lib/prisma.js';
 import { PricingEngine } from '../lib/pricing.js';
 import StripeService from '../lib/stripe.js';
@@ -564,30 +564,6 @@ router.get('/stripe-config', (req, res) => {
   res.json({
     publishableKey: StripeService.getPublishableKey()
   });
-});
-
-// POST /api/stripe-webhook - Handle Stripe webhooks
-router.post('/stripe-webhook', raw({ type: 'application/json' }), async (req, res) => {
-  try {
-    const signature = req.headers['stripe-signature'] as string;
-    
-    if (!signature) {
-      return res.status(400).json({ error: 'Missing stripe signature' });
-    }
-
-    const result = await StripeService.handleWebhook(req.body, signature);
-    
-    res.json(result);
-  } catch (error: any) {
-    console.error('Webhook error:', error);
-    
-    // Return 200 to acknowledge receipt even if processing failed
-    // to prevent Stripe from retrying
-    res.status(200).json({ 
-      success: false, 
-      error: error.message || 'Webhook processing failed' 
-    });
-  }
 });
 
 // ============= GOHIGHLEVEL INTEGRATION =============

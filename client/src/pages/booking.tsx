@@ -187,24 +187,6 @@ export default function BookingPage() {
       // Store booking ID for confirmation page
       localStorage.setItem('lastBookingId', booking.id);
       
-      // Send confirmation email (in development mode, this will be logged)
-      try {
-        const { EmailService } = await import('@/lib/email-service');
-        await EmailService.sendBookingConfirmation({
-          bookingId: booking.id,
-          guestName: bookingData.guestName,
-          guestEmail: bookingData.guestEmail,
-          unitName: displayName,
-          checkIn,
-          checkOut,
-          totalAmount: actualTotalCents,
-          specialRequests: bookingData.specialRequests,
-        });
-      } catch (emailError) {
-        console.warn('Email notification failed:', emailError);
-        // Don't fail the booking if email fails
-      }
-      
       setBookingId(booking.id);
       setCurrentStep('confirmation');
       

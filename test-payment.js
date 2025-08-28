@@ -69,7 +69,7 @@ async function testPaymentIntegration() {
     console.log('\n⚠️  Note: To complete payment flow, you need to:');
     console.log('   1. Add real Stripe test keys to .env file');
     console.log('   2. Test frontend payment form with real Stripe keys');
-    console.log('   3. Test webhook handling (optional for basic payments)');
+    console.log('   3. Monitor payment status in Stripe dashboard');
 
   } catch (error) {
     console.error('❌ Test failed:', error.message);

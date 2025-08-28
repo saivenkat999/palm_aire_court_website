@@ -24,7 +24,8 @@ export default function UnitCard({ unit }: UnitCardProps) {
     // Get nightly rates from rate plans
     const nightlyRates = unit.ratePlans
       ?.filter((plan) => plan.nightly && plan.nightly > 0)
-      .map((plan) => plan.nightly);
+      .map((plan) => plan.nightly)
+      .filter((rate): rate is number => rate !== undefined && rate !== null);
     
     if (!nightlyRates || nightlyRates.length === 0) {
       return 'Contact for pricing';

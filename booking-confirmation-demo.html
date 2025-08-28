@@ -164,8 +164,7 @@
                     <li>✅ Important information included</li>
                     <li>✅ Development mode logging</li>
                 </ul>
-                <button class="button" onclick="testEmailService()">Test Email Service</button>
-                <button class="button secondary" onclick="viewEmailHistory()">View Email History</button>
+                <button class="button secondary" onclick="viewEmailHistory()">View Demo Logs</button>
             </div>
 
             <div class="step">
@@ -265,57 +264,6 @@
                 <button class="button" onclick="window.open('/booking/confirmation', '_blank')">
                     Open Confirmation Page
                 </button>
-            `);
-        }
-
-        function testEmailService() {
-            // Simulate sending a booking confirmation email
-            const emailData = {
-                bookingId: 'DEMO' + Date.now().toString().slice(-6),
-                guestName: 'Demo Guest',
-                guestEmail: 'demo@example.com',
-                unitName: 'Essex Cottage',
-                checkIn: '2025-09-01',
-                checkOut: '2025-09-05',
-                totalAmount: 8500,
-                specialRequests: 'Demo booking for testing purposes'
-            };
-
-            // Store demo email
-            const emails = JSON.parse(localStorage.getItem('demoEmails') || '[]');
-            emails.push({
-                to: emailData.guestEmail,
-                subject: `Booking Confirmed - Palm Aire Court Reservation #${emailData.bookingId}`,
-                timestamp: new Date().toISOString(),
-                type: 'booking_confirmation',
-                data: emailData
-            });
-            localStorage.setItem('demoEmails', JSON.stringify(emails));
-
-            showResults('Email Service Test', `
-                <div class="status success">
-                    ✅ Email notification sent successfully!
-                </div>
-                <p><strong>Email Details:</strong></p>
-                <div class="booking-details">
-                    <div class="detail-item">
-                        <span class="detail-label">To:</span>
-                        <span class="detail-value">${emailData.guestEmail}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Booking ID:</span>
-                        <span class="detail-value">${emailData.bookingId}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Guest:</span>
-                        <span class="detail-value">${emailData.guestName}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Unit:</span>
-                        <span class="detail-value">${emailData.unitName}</span>
-                    </div>
-                </div>
-                <p><em>In development mode, emails are logged to console and stored locally.</em></p>
             `);
         }
 

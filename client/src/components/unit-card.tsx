@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Unit } from "@/hooks/use-api";
+import OptimizedImage from "./optimized-image";
 
 interface UnitCardProps {
   unit: Unit;
@@ -42,11 +43,21 @@ export default function UnitCard({ unit }: UnitCardProps) {
       className="bg-card rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
       data-testid={`unit-card-${unit.slug}`}
     >
-      <img
-        src={unit.photos?.[0] || '/assets/cottage/exterior.webp'}
-        alt={`${unit.name} exterior view`}
-        className="w-full h-48 object-cover"
-      />
+      <div className="relative">
+        <OptimizedImage
+          src={unit.photos || []}
+          alt={`${unit.name} exterior view`}
+          className="w-full h-48"
+          fallbackSrc="/assets/cottage/exterior.webp"
+        />
+        
+        {/* Photo count indicator */}
+        {unit.photos && Array.isArray(unit.photos) && unit.photos.length > 1 && (
+          <div className="absolute top-3 right-3 bg-black/70 text-white px-2 py-1 rounded-full text-xs font-medium">
+            📷 {unit.photos.length}
+          </div>
+        )}
+      </div>
       
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">

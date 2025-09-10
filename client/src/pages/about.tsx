@@ -56,43 +56,32 @@ export default function About() {
             About Palm Aire Court
           </h1>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Your desert oasis in the heart of Phoenix, Arizona
+            A family-owned desert oasis where hospitality meets comfort in Phoenix, Arizona
           </p>
         </div>
 
-        {/* Main Story */}
+        {/* Meet the Owners */}
         <section className="mb-16">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="font-display font-bold text-2xl md:text-3xl mb-6">
-                Welcome to Our Desert Community
+                Meet the Owners
               </h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  Nestled in the beautiful Sonoran Desert of Phoenix, Arizona, Palm Aire Court 
-                  has been welcoming travelers and seasonal residents for over three decades. 
-                  Our community offers a perfect blend of modern comfort and southwestern charm, 
-                  creating an atmosphere where visitors quickly become friends and friends become family.
+                  Howard and Jayme Eigsti are proud parents of seven children and grandparents to 24 (and counting!) grandchildren. They are grain farmers in Illinois with a passion for hospitality.
                 </p>
                 <p>
-                  Whether you're seeking a peaceful winter retreat, a comfortable base for exploring 
-                  the greater Phoenix area, or a place to call home for several months, Palm Aire Court 
-                  provides the amenities and community spirit that make every stay memorable.
-                </p>
-                <p>
-                  Our well-maintained property features a variety of accommodation options, from cozy 
-                  trailers perfect for budget-conscious travelers to spacious cottages ideal for 
-                  couples and families. Each unit is thoughtfully appointed with modern conveniences 
-                  while maintaining the warm, welcoming atmosphere that defines our community.
+                  Several years ago, they purchased their first Airbnb in Phoenix, where they discovered a love for hosting guests. This experience inspired them to buy Palm Aire Court, allowing them to expand their ability to welcome travelers, provide exceptional hospitality, and make guests feel at home, even when they're far from home.
                 </p>
               </div>
             </div>
             
-            <div>
+            <div className="flex justify-center lg:justify-start">
               <img
-                src="/assets/cottage/exterior.webp"
-                alt="Palm Aire Court community overview showing accommodations and desert landscape"
-                className="rounded-xl shadow-lg w-full"
+                src="/assets/About.jpeg"
+                alt="Howard and Jayme Eigsti, owners of Palm Aire Court"
+                className="rounded-xl shadow-lg w-full max-w-md object-contain"
               />
             </div>
           </div>

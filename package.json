@@ -11,7 +11,11 @@
     "db:push": "drizzle-kit push",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
-    "prisma:seed": "tsx prisma/seed.ts"
+    "prisma:seed": "tsx prisma/seed.ts",
+    "deploy:db": "prisma migrate deploy && prisma generate && npm run prisma:seed",
+    "setup:db": "node scripts/setup-database.js",
+    "docker:build": "docker build -t palm-aire-court .",
+    "docker:run": "docker run -p 5000:5000 palm-aire-court"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

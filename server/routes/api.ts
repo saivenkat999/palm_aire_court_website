@@ -2,6 +2,8 @@ import { Router } from 'express';
 import prisma from '../lib/prisma.js';
 import { PricingEngine } from '../lib/pricing.js';
 import StripeService from '../lib/stripe.js';
+import { PhotoService } from '../lib/photo-service.js';
+import { GHLIntegration } from '../lib/ghl-integration.js';
 import { z } from 'zod';
 import { addDays } from 'date-fns';
 
@@ -71,23 +73,37 @@ router.get('/units', async (req, res) => {
       orderBy: { name: 'asc' }
     });
 
-    // For units without specific rate plans, add category-wide rate plans
-    const unitsWithRates = await Promise.all(units.map(async (unit) => {
-      if (unit.ratePlans.length === 0) {
-        // Look for category-wide rate plans
-        const categoryRatePlans = await prisma.ratePlan.findMany({
-          where: {
-            category: unit.type,
-            unitId: null
-          }
-        });
-        return {
-          ...unit,
-          ratePlans: categoryRatePlans
-        };
+    // Get all category-wide rate plans in one query
+    const categoryRatePlans = await prisma.ratePlan.findMany({
+      where: {
+        unitId: null
       }
-      return unit;
-    }));
+    });
+
+    // Create a map for quick lookup
+    const categoryRateMap = new Map();
+    categoryRatePlans.forEach(ratePlan => {
+      if (!categoryRateMap.has(ratePlan.category)) {
+        categoryRateMap.set(ratePlan.category, []);
+      }
+      categoryRateMap.get(ratePlan.category).push(ratePlan);
+    });
+
+    // For units without specific rate plans, add category-wide rate plans
+    const unitsWithRates = units.map((unit) => {
+      const ratePlans = unit.ratePlans.length > 0 
+        ? unit.ratePlans 
+        : (categoryRateMap.get(unit.type) || []);
+
+      return {
+        ...unit,
+        ratePlans,
+        // Parse JSON fields and add dynamic photos
+        amenities: unit.amenities ? JSON.parse(unit.amenities) : [],
+        features: unit.features ? JSON.parse(unit.features) : [],
+        photos: PhotoService.getPhotosForUnit(unit.slug, unit.type)
+      };
+    });
 
     res.json(unitsWithRates);
   } catch (error) {
@@ -123,7 +139,15 @@ router.get('/units/:slug', async (req, res) => {
       unit.ratePlans = categoryRatePlans;
     }
 
-    res.json(unit);
+    // Parse JSON fields for single unit and add dynamic photos
+    const unitWithParsedFields = {
+      ...unit,
+      amenities: unit.amenities ? JSON.parse(unit.amenities) : [],
+      features: unit.features ? JSON.parse(unit.features) : [],
+      photos: PhotoService.getPhotosForUnit(unit.slug, unit.type)
+    };
+
+    res.json(unitWithParsedFields);
   } catch (error) {
     console.error('Error fetching unit:', error);
     res.status(500).json({ error: 'Failed to fetch unit' });
@@ -378,6 +402,47 @@ router.post('/bookings', async (req, res) => {
       await prisma.hold.delete({
         where: { id: bookingData.holdId }
       }).catch(console.error); // Don't fail booking if hold deletion fails
+    }
+
+    // ============= GOHIGHLEVEL CRM INTEGRATION =============
+    // Create contact and calendar event in GoHighLevel CRM
+    if (process.env.GHL_API_KEY) {
+      try {
+        console.log('🔄 Creating GHL contact and calendar event for booking:', booking.id);
+        
+        const ghl = new GHLIntegration(process.env.GHL_API_KEY);
+        
+        const ghlResult = await ghl.createBookingInGHL({
+          guestName: bookingData.guestName,
+          guestEmail: bookingData.guestEmail,
+          guestPhone: bookingData.guestPhone,
+          checkIn: bookingData.checkIn,
+          checkOut: bookingData.checkOut,
+          unitId: booking.unit.id,
+          unitName: `${booking.unit.name} (${booking.unit.type})`,
+          totalAmount: pricing.total,
+          specialRequests: bookingData.specialRequests,
+          bookingId: booking.id  // Add the booking ID for tracking
+        });
+        
+        console.log('✅ GHL Integration successful:', {
+          contactCreated: !!ghlResult.contact,
+          calendarEventCreated: !!ghlResult.event,
+          bookingId: booking.id
+        });
+        
+        // Add GHL IDs to booking response for reference
+        (booking as any).ghlContactId = ghlResult.contact?.id || ghlResult.contact?.contactId;
+        (booking as any).ghlEventId = ghlResult.event?.id || ghlResult.event?.appointmentId;
+        
+      } catch (ghlError) {
+        console.error('⚠️ GHL Integration failed for booking:', booking.id, ghlError);
+        // Don't fail the booking if GHL integration fails
+        // Hotel management will still have the booking in the system
+        (booking as any).ghlIntegrationError = 'Failed to sync with CRM - contact admin';
+      }
+    } else {
+      console.log('⚠️ GHL API key not configured - skipping CRM integration');
     }
 
     res.status(201).json(booking);

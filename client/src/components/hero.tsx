@@ -3,14 +3,15 @@ import { Button } from "@/components/ui/button";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-[600px] flex items-center justify-center">
+    <section className="relative min-h-[700px] flex items-center justify-center">
       <div 
-        className="absolute inset-0 bg-cover bg-center"
+        className="absolute inset-0 bg-cover"
         style={{
-          backgroundImage: "url('/assets/cottage/exterior.webp')"
+          backgroundImage: "url('/assets/FullSizeRender.jpeg')",
+          backgroundPosition: "center 70%"
         }}
       />
-      <div className="absolute inset-0 hero-gradient" />
+      <div className="absolute inset-0 bg-black/30" />
       
       <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
         <h1 className="font-display font-bold text-4xl md:text-6xl mb-6 leading-tight">

@@ -10,10 +10,10 @@
     "baths": 2,
     "description": "Cottage 9606 offers spacious two-bedroom, two-bathroom accommodations with modern amenities. Perfect for families or groups seeking comfortable desert lodging with full kitchen and living space.",
     "images": [
-      "https://placehold.co/1200x800/E07A5F/ffffff?text=Cottage+9606+Living+Area",
-      "https://placehold.co/1200x800/F2CC8F/000000?text=Cottage+9606+Master+Bedroom",
-      "https://placehold.co/1200x800/EEEAE6/000000?text=Cottage+9606+Kitchen",
-      "https://placehold.co/1200x800/E07A5F/ffffff?text=Cottage+9606+Exterior"
+      "/assets/2BHK/1.jpeg",
+      "/assets/2BHK/2.avif",
+      "/assets/2BHK/3.jpeg",
+      "/assets/2BHK/4.jpeg"
     ],
     "amenities": [
       "wifi",
@@ -79,10 +79,10 @@
     "baths": 1,
     "description": "Cottage 9612 provides comfortable one-bedroom accommodations with full kitchen and living area. Ideal for couples seeking a peaceful desert retreat with modern conveniences.",
     "images": [
-      "https://placehold.co/1200x800/EEEAE6/000000?text=Cottage+9612+Living+Room",
-      "https://placehold.co/1200x800/E07A5F/ffffff?text=Cottage+9612+Bedroom",
-      "https://placehold.co/1200x800/F2CC8F/000000?text=Cottage+9612+Kitchen",
-      "https://placehold.co/1200x800/EEEAE6/000000?text=Cottage+9612+Exterior"
+      "/assets/1BHK/1.avif",
+      "/assets/1BHK/2.avif",
+      "/assets/1BHK/3.jpeg",
+      "/assets/1BHK/4.avif"
     ],
     "amenities": [
       "wifi",
@@ -181,10 +181,10 @@
     "baths": 1,
     "description": "5th Wheel Trailer #3 provides comfortable, affordable accommodations in a well-maintained mobile unit. Features essential amenities and access to all community facilities.",
     "images": [
-      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+3+Interior",
-      "https://placehold.co/1200x800/F2CC8F/000000?text=Trailer+3+Bedroom",
-      "https://placehold.co/1200x800/E07A5F/ffffff?text=Trailer+3+Kitchen",
-      "https://placehold.co/1200x800/EEEAE6/000000?text=Trailer+3+Exterior"
+      "/assets/Trailer/IMG_7832.jpg",
+      "/assets/Trailer/Personal RV.jpg",
+      "/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg",
+      "/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg"
     ],
     "amenities": [
       "wifi",

@@ -6,8 +6,34 @@ import { useUnits } from "@/hooks/use-api";
 export default function FeaturedStays() {
   const { data: units = [], isLoading } = useUnits();
   
-  // Get first 3 active units as featured
-  const featuredUnits = units.filter(unit => unit.active).slice(0, 3);
+  // Get one representative unit from each accommodation type
+  const getFeaturedUnits = () => {
+    const activeUnits = units.filter(unit => unit.active);
+    
+    const cottage1BR = activeUnits.find(unit => unit.type === 'COTTAGE_1BR');
+    const cottage2BR = activeUnits.find(unit => unit.type === 'COTTAGE_2BR');
+    const trailer = activeUnits.find(unit => unit.type === 'TRAILER');
+    
+    // Return available units, prioritizing variety
+    const featuredUnits = [];
+    if (cottage1BR) featuredUnits.push(cottage1BR);
+    if (cottage2BR) featuredUnits.push(cottage2BR);
+    if (trailer) featuredUnits.push(trailer);
+    
+    // If we don't have all 3 types, fill with remaining active units
+    while (featuredUnits.length < 3 && featuredUnits.length < activeUnits.length) {
+      const remaining = activeUnits.filter(unit => !featuredUnits.includes(unit));
+      if (remaining.length > 0) {
+        featuredUnits.push(remaining[0]);
+      } else {
+        break;
+      }
+    }
+    
+    return featuredUnits;
+  };
+
+  const featuredUnits = getFeaturedUnits();
 
   const getLowestPrice = (unit: any) => {
     // Get nightly rates from rate plans
@@ -58,7 +84,7 @@ export default function FeaturedStays() {
               data-testid={`featured-unit-${unit.slug}`}
             >
               <img
-                src={unit.photos?.[0] || '/assets/cottage/exterior.webp'}
+                src={unit.photos?.[0] || '/assets/Logo.png'}
                 alt={`${unit.name} - accommodation`}
                 className="w-full h-48 object-cover"
               />
@@ -70,9 +96,9 @@ export default function FeaturedStays() {
                       {unit.name}
                     </h3>
                     <p className="text-muted-foreground" data-testid={`unit-type-${unit.slug}`}>
-                      {unit.type === 'COTTAGE_1BR' ? 'Cottage 1br' :
-                       unit.type === 'COTTAGE_2BR' ? 'Cottage 2br' :
-                       unit.type === 'TRAILER' ? 'Trailer' :
+                      {unit.type === 'COTTAGE_1BR' ? '1 Bedroom Cottage' :
+                       unit.type === 'COTTAGE_2BR' ? '2 Bedroom Cottage' :
+                       unit.type === 'TRAILER' ? '5th Wheel Trailer' :
                        unit.type === 'RV_SITE' ? 'RV Site' : unit.type}
                     </p>
                   </div>

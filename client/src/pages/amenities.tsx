@@ -72,15 +72,24 @@ export default function Amenities() {
   return (
     <div className="min-h-screen bg-background py-8" data-testid="amenities-page">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+        {/* Header with Hero Image */}
         <div className="text-center mb-12">
           <h1 className="font-display font-bold text-3xl md:text-4xl mb-4">
             Amenities & Community Life
           </h1>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-8">
             Discover the comfort and convenience of Palm Aire Court with our comprehensive amenities 
             and vibrant community activities designed for your enjoyment and well-being.
           </p>
+          
+          {/* Hero Image - Community in Action */}
+          <div className="max-w-4xl mx-auto mb-8">
+            <img
+              src="/assets/Amanities/1.jpeg"
+              alt="Community members enjoying amenities at Palm Aire Court"
+              className="rounded-xl shadow-lg w-full h-64 md:h-80 object-cover"
+            />
+          </div>
         </div>
 
         {/* Community Amenities */}
@@ -99,6 +108,36 @@ export default function Amenities() {
               amenityIds={communityAmenities.map(a => a.id)}
               className="col-span-full"
             />
+          </div>
+
+          {/* Community Amenities Photo Gallery */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div className="space-y-2">
+              <img
+                src="/assets/Amanities/2.jpeg"
+                alt="Community pavilion and outdoor gathering area"
+                className="rounded-lg shadow-md w-full h-48 object-cover"
+              />
+              <p className="text-sm text-muted-foreground text-center">Community Pavilion & BBQ Area</p>
+            </div>
+            
+            <div className="space-y-2">
+              <img
+                src="/assets/Amanities/3.jpeg"
+                alt="Recreation and activity area"
+                className="rounded-lg shadow-md w-full h-48 object-cover"
+              />
+              <p className="text-sm text-muted-foreground text-center">Recreation & Activity Center</p>
+            </div>
+            
+            <div className="space-y-2">
+              <img
+                src="/assets/Amanities/4.jpeg"
+                alt="Community facilities and amenities"
+                className="rounded-lg shadow-md w-full h-48 object-cover"
+              />
+              <p className="text-sm text-muted-foreground text-center">Community Facilities</p>
+            </div>
           </div>
         </section>
 
@@ -127,9 +166,30 @@ export default function Amenities() {
             <h2 className="font-display font-bold text-2xl md:text-3xl mb-4">
               Community Activities
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
               Engaging activities and social opportunities that foster friendship and community spirit
             </p>
+            
+            {/* Community Activities Images */}
+            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8">
+              <div className="space-y-2">
+                <img
+                  src="/assets/Amanities/5.jpeg"
+                  alt="Community members enjoying social activities together"
+                  className="rounded-lg shadow-md w-full h-48 object-cover"
+                />
+                <p className="text-sm text-muted-foreground text-center">Fellowship & Social Time</p>
+              </div>
+              
+              <div className="space-y-2">
+                <img
+                  src="/assets/Amanities/6.jpeg"
+                  alt="Residents participating in community activities"
+                  className="rounded-lg shadow-md w-full h-48 object-cover"
+                />
+                <p className="text-sm text-muted-foreground text-center">Group Activities & Events</p>
+              </div>
+            </div>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">

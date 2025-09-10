@@ -17,12 +17,7 @@ async function main() {
       baths: 2,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'full-kitchen', 'ro-water', 'laundry-nearby', 'patio', 'two-bathrooms'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 4 guests'],
-      photos: [
-        '/assets/cottage/living_area.webp',
-        '/assets/cottage/master_bedroom.webp',
-        '/assets/cottage/kitchen.jpeg',
-        '/assets/cottage/exterior.webp'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'cottage-9608',
@@ -33,12 +28,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby', 'patio'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/cottage/IMG_7810-800x600.webp',
-        '/assets/cottage/IMG_7811-800x600.webp',
-        '/assets/cottage/kitchen.jpeg',
-        '/assets/cottage/exterior_2.jpeg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'cottage-9612',
@@ -49,12 +39,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'full-kitchen', 'ro-water', 'laundry-nearby', 'patio'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/cottage/IMG_7812-800x600.webp',
-        '/assets/cottage/master_bedroom.webp',
-        '/assets/cottage/kitchen.jpeg',
-        '/assets/cottage/exterior_3.jpg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'cottage-9614',
@@ -66,12 +51,7 @@ async function main() {
       active: false,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'full-kitchen', 'ro-water', 'laundry-nearby', 'patio'],
       features: ['Unit currently under renovation', 'Availability coming soon', 'Contact us for updates'],
-      photos: [
-        '/assets/cottage/exterior_4.jpg',
-        '/assets/cottage/living_area.webp',
-        '/assets/cottage/kitchen.jpeg',
-        '/assets/cottage/master_bedroom.webp'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'cottage-9618',
@@ -82,12 +62,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'full-kitchen', 'ro-water', 'laundry-nearby', 'patio'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 4 guests'],
-      photos: [
-        '/assets/cottage/living_area.webp',
-        '/assets/cottage/master_bedroom.webp',
-        '/assets/cottage/IMG_7812-800x600.webp',
-        '/assets/cottage/exterior.webp'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     // 5TH WHEEL TRAILERS
     {
@@ -99,11 +74,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/Trailer/IMG_7832.jpg',
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg',
-        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'trailer-05',
@@ -114,11 +85,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg',
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg',
-        '/assets/Trailer/IMG_7832.jpg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'trailer-07',
@@ -129,11 +96,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg',
-        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg',
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'trailer-08',
@@ -144,11 +107,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg',
-        '/assets/Trailer/IMG_7832.jpg',
-        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'trailer-09',
@@ -159,11 +118,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg',
-        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg',
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'trailer-10',
@@ -174,11 +129,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/Trailer/IMG_7832.jpg',
-        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg',
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'trailer-12',
@@ -189,11 +140,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg',
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg',
-        '/assets/Trailer/IMG_7832.jpg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'trailer-14',
@@ -204,11 +151,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg',
-        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg',
-        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'trailer-18',
@@ -219,11 +162,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg',
-        '/assets/Trailer/IMG_7832.jpg',
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'trailer-20',
@@ -234,11 +173,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg',
-        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg',
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'trailer-21',
@@ -249,11 +184,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/Trailer/IMG_7832.jpg',
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg',
-        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'trailer-22',
@@ -264,11 +195,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg',
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg',
-        '/assets/Trailer/IMG_7832.jpg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'trailer-23',
@@ -279,11 +206,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg',
-        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg',
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'trailer-24',
@@ -294,11 +217,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg',
-        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg',
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'trailer-25',
@@ -309,11 +228,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg',
-        '/assets/Trailer/IMG_7832.jpg',
-        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'trailer-26',
@@ -324,11 +239,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.09.37_a3e709a8.jpg',
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg',
-        '/assets/Trailer/3FA299C7-A4A6-4626-B68F-CD12E1B57BFF (1).jpg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     },
     {
       slug: 'trailer-27',
@@ -339,11 +250,7 @@ async function main() {
       baths: 1,
       amenities: ['wifi', 'cable-tv', 'ac-heat', 'parking', 'kitchenette', 'ro-water', 'laundry-nearby'],
       features: ['No pets allowed', 'No smoking', 'Quiet hours 10 PM - 7 AM', 'Maximum occupancy: 2 guests'],
-      photos: [
-        '/assets/Trailer/IMG_7832.jpg',
-        '/assets/Trailer/8496AF4B-5B77-41CB-B0B5-AECF42FBFB0B.jpg',
-        '/assets/Trailer/WhatsApp Image 2025-08-27 at 09.10.59_3596466c.jpg'
-      ]
+      photos: [] // Photos now handled by PhotoService
     }
   ];
 
@@ -353,14 +260,17 @@ async function main() {
   await prisma.ratePlan.deleteMany();
   await prisma.unit.deleteMany();
 
-  console.log('Creating units...');
-  for (const unitData of units) {
-    await prisma.unit.create({
-      data: unitData,
-    });
-  }
-
-  console.log('Creating rate plans...');
+console.log('Creating units...');
+for (const unitData of units) {
+  await prisma.unit.create({
+    data: {
+      ...unitData,
+      amenities: JSON.stringify(unitData.amenities),
+      features: JSON.stringify(unitData.features),
+      photos: JSON.stringify(unitData.photos),
+    },
+  });
+}  console.log('Creating rate plans...');
   // Create rate plans for each unit type
   const ratePlans = [
     // Cottage rates

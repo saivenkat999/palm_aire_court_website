@@ -15,7 +15,7 @@ import { useCreateBooking } from '@/hooks/use-api';
 import PaymentForm from '@/components/payment-form';
 import { z } from 'zod';
 import { CalendarDays, Users, MapPin, CreditCard, Check, ChevronRight, Loader2 } from 'lucide-react';
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, isValid } from 'date-fns';
 
 const bookingFormSchema = z.object({
   guestName: z.string().min(2, 'Name must be at least 2 characters'),
@@ -44,6 +44,48 @@ export default function BookingPage() {
   const checkOut = searchParams.get('checkOut') || '';
   const guests = parseInt(searchParams.get('guests') || '1');
   const totalCents = parseInt(searchParams.get('total') || '0'); // Convert to cents for Stripe
+
+  // Validate dates
+  const checkInDate = checkIn ? parseISO(checkIn) : null;
+  const checkOutDate = checkOut ? parseISO(checkOut) : null;
+  
+  // Check if dates are valid
+  const areDatesValid = checkInDate && checkOutDate && isValid(checkInDate) && isValid(checkOutDate);
+  
+  // Safe date formatting function
+  const formatDate = (dateString: string, formatStr: string) => {
+    if (!dateString) return 'Select Date';
+    try {
+      const date = parseISO(dateString);
+      return isValid(date) ? format(date, formatStr) : 'Invalid Date';
+    } catch (error) {
+      return 'Invalid Date';
+    }
+  };
+
+  // Redirect if missing required params
+  useEffect(() => {
+    if (!unitId && !unitType) {
+      toast({
+        variant: "destructive",
+        title: "Missing Information",
+        description: "Please select a unit to book.",
+      });
+      setLocation('/stays');
+      return;
+    }
+    
+    // Only validate dates if we have the required booking parameters
+    if ((unitId || unitType) && (!checkIn || !checkOut)) {
+      toast({
+        variant: "destructive",
+        title: "Missing Dates",
+        description: "Please select check-in and check-out dates.",
+      });
+      setLocation('/stays');
+      return;
+    }
+  }, [unitId, unitType, checkIn, checkOut, setLocation, toast]);
 
   // Determine if this is a pool booking (unitType provided) or specific unit booking
   const isPoolBooking = !!unitType && !unitId;
@@ -245,11 +287,11 @@ export default function BookingPage() {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Check-in:</span>
-                <span>{format(parseISO(checkIn), 'MMM dd, yyyy')}</span>
+                <span>{formatDate(checkIn, 'MMM dd, yyyy')}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Check-out:</span>
-                <span>{format(parseISO(checkOut), 'MMM dd, yyyy')}</span>
+                <span>{formatDate(checkOut, 'MMM dd, yyyy')}</span>
               </div>
               <Separator className="my-2" />
               <div className="flex justify-between font-semibold">
@@ -268,6 +310,7 @@ export default function BookingPage() {
       </div>
     );
   }
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="mb-8">
@@ -431,7 +474,7 @@ export default function BookingPage() {
                   <CalendarDays className="h-4 w-4 text-muted-foreground" />
                   <div>
                     <div className="font-medium">
-                      {format(parseISO(checkIn), 'MMM dd')} - {format(parseISO(checkOut), 'MMM dd, yyyy')}
+                      {formatDate(checkIn, 'MMM dd')} - {formatDate(checkOut, 'MMM dd, yyyy')}
                     </div>
                   </div>
                 </div>

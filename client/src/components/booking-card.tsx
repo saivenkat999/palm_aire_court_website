@@ -58,6 +58,11 @@ export default function BookingCard({ unit }: BookingCardProps) {
     setLocation(`/booking?${params.toString()}`);
   };
 
+  // Calculate the base nightly rate for this unit
+  const baseNightlyRate = unit.ratePlans && unit.ratePlans.length > 0 
+    ? Math.min(...unit.ratePlans.map(plan => plan.nightly)) 
+    : 0;
+
   const canReserve = dateRange?.from && dateRange?.to && pricing;
 
   return (
@@ -67,7 +72,7 @@ export default function BookingCard({ unit }: BookingCardProps) {
           <div className="mb-6">
             <div className="flex items-baseline space-x-2 mb-2">
               <span className="text-2xl font-bold text-primary" data-testid="booking-price">
-                From $45
+                From {baseNightlyRate ? formatCurrency(baseNightlyRate / 100) : '—'}
               </span>
               <span className="text-muted-foreground">per night</span>
             </div>

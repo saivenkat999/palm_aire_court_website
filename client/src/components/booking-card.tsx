@@ -59,8 +59,8 @@ export default function BookingCard({ unit }: BookingCardProps) {
   };
 
   // Calculate the base nightly rate for this unit
-  const baseNightlyRate = unit.ratePlans && unit.ratePlans.length > 0 
-    ? Math.min(...unit.ratePlans.map(plan => plan.nightly)) 
+  const baseNightlyRate = unit.ratePlans && unit.ratePlans.length > 0
+    ? Math.min(...unit.ratePlans.map(plan => plan.nightly || 0).filter(n => n > 0))
     : 0;
 
   const canReserve = dateRange?.from && dateRange?.to && pricing;

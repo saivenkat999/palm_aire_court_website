@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import prisma from './prisma.js';
+import supabase from './supabase.js';
 
 // Initialize Stripe with the secret key (use library default API version)
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
@@ -145,24 +145,43 @@ export class StripeService {
     status: string
   ) {
     try {
-      const payment = await prisma.payment.upsert({
-        where: { stripeIntentId: paymentIntentId },
-        update: {
-          status,
-          amountCents: amount,
-          updatedAt: new Date()
-        },
-        create: {
-          bookingId,
-          stripeIntentId: paymentIntentId,
-          amountCents: amount,
-          status,
-          provider: 'stripe',
-          currency: 'USD'
-        }
-      });
+      const { data: existingPayment } = await supabase
+        .from('payments')
+        .select('*')
+        .eq('stripe_intent_id', paymentIntentId)
+        .maybeSingle();
 
-      return payment;
+      if (existingPayment) {
+        const { data: payment, error } = await supabase
+          .from('payments')
+          .update({
+            status,
+            amount_cents: amount,
+            updated_at: new Date().toISOString()
+          })
+          .eq('stripe_intent_id', paymentIntentId)
+          .select()
+          .single();
+
+        if (error) throw error;
+        return payment;
+      } else {
+        const { data: payment, error } = await supabase
+          .from('payments')
+          .insert({
+            booking_id: bookingId,
+            stripe_intent_id: paymentIntentId,
+            amount_cents: amount,
+            status,
+            provider: 'stripe',
+            currency: 'USD'
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+        return payment;
+      }
     } catch (error) {
       console.error('Error creating payment record:', error);
       throw new Error('Failed to create payment record');

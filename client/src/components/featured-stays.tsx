@@ -13,9 +13,9 @@ export default function FeaturedStays() {
     const cottage1BR = activeUnits.find(unit => unit.type === 'COTTAGE_1BR');
     const cottage2BR = activeUnits.find(unit => unit.type === 'COTTAGE_2BR');
     const trailer = activeUnits.find(unit => unit.type === 'TRAILER');
-    
+
     // Return available units, prioritizing variety
-    const featuredUnits = [];
+    const featuredUnits: typeof activeUnits = [];
     if (cottage1BR) featuredUnits.push(cottage1BR);
     if (cottage2BR) featuredUnits.push(cottage2BR);
     if (trailer) featuredUnits.push(trailer);

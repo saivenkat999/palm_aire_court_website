@@ -1,89 +1,69 @@
 import { Router } from 'express';
-import { prisma } from '../lib/prisma.js';
+import supabase from '../lib/supabase.js';
 
 const router = Router();
 
-// Get all bookings for admin
 router.get('/bookings', async (req, res) => {
   try {
-    const bookings = await prisma.booking.findMany({
-      include: {
-        unit: {
-          select: { name: true }
-        },
-        customer: {
-          select: { firstName: true, lastName: true, email: true, phone: true }
-        }
-      },
-      orderBy: {
-        checkIn: 'asc'
-      }
-    });
+    const { data: bookings, error } = await supabase
+      .from('bookings')
+      .select(`
+        *,
+        unit:units!inner(name),
+        customer:customers!inner(first_name, last_name, email, phone)
+      `)
+      .order('check_in', { ascending: true });
 
-    res.json(bookings);
+    if (error) throw error;
+
+    res.json(bookings || []);
   } catch (error) {
     console.error('Error fetching bookings:', error);
     res.status(500).json({ error: 'Failed to fetch bookings' });
   }
 });
 
-// Get bookings by date range for calendar view
 router.get('/bookings/calendar', async (req, res) => {
   try {
     const { start, end } = req.query;
-    
-    const bookings = await prisma.booking.findMany({
-      where: {
-        OR: [
-          {
-            checkIn: {
-              gte: new Date(start as string),
-              lte: new Date(end as string)
-            }
-          },
-          {
-            checkOut: {
-              gte: new Date(start as string),
-              lte: new Date(end as string)
-            }
-          }
-        ]
-      },
-      include: {
-        unit: {
-          select: { id: true, name: true }
-        },
-        customer: {
-          select: { firstName: true, lastName: true }
-        }
-      }
-    });
 
-    res.json(bookings);
+    const { data: bookings, error } = await supabase
+      .from('bookings')
+      .select(`
+        *,
+        unit:units!inner(id, name),
+        customer:customers!inner(first_name, last_name)
+      `)
+      .or(`check_in.gte.${start as string},check_in.lte.${end as string},check_out.gte.${start as string},check_out.lte.${end as string}`);
+
+    if (error) throw error;
+
+    res.json(bookings || []);
   } catch (error) {
     console.error('Error fetching calendar bookings:', error);
     res.status(500).json({ error: 'Failed to fetch calendar bookings' });
   }
 });
 
-// Update booking status
 router.patch('/bookings/:id/status', async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
 
-    const booking = await prisma.booking.update({
-      where: { id },
-      data: { status },
-      include: {
-        unit: {
-          select: { name: true }
-        },
-        customer: {
-          select: { firstName: true, lastName: true, email: true, phone: true }
-        }
-      }
-    });
+    const { data: booking, error } = await supabase
+      .from('bookings')
+      .update({ status })
+      .eq('id', id)
+      .select(`
+        *,
+        unit:units!inner(name),
+        customer:customers!inner(first_name, last_name, email, phone)
+      `)
+      .single();
+
+    if (error || !booking) {
+      throw new Error('Failed to update booking status');
+    }
 
     res.json(booking);
   } catch (error) {

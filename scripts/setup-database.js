@@ -55,12 +55,12 @@ async function setupDatabase() {
   
   if (!isConnected) {
     console.log('\n📋 Database Connection Troubleshooting:');
-    console.log('1. Check your DATABASE_URL in .env file');
-    console.log('2. Make sure your Supabase project is active');
-    console.log('3. Verify the database password is correct');
-    console.log('4. Check if your IP is whitelisted (if applicable)');
-    console.log('\nExample DATABASE_URL for Supabase:');
-    console.log('postgresql://postgres:yourpassword@db.project-ref.supabase.co:5432/postgres?schema=public&sslmode=require');
+    console.log('1. Confirm DATABASE_URL is set correctly in your .env');
+    console.log('2. Ensure the Railway Postgres instance is running and accepting connections');
+    console.log('3. Verify the username/password match the instance credentials');
+    console.log('4. If using SSL enforcement, append ?sslmode=require to the URL');
+    console.log('\nExample DATABASE_URL for Railway:');
+    console.log('postgresql://USER:PASSWORD@HOST:PORT/DATABASE?sslmode=require');
     return;
   }
 
@@ -75,8 +75,8 @@ async function setupDatabase() {
     console.log('🌱 Seeding database...');
     await runPrismaCommand('db seed');
     
-    console.log('\n🎉 Database setup completed successfully!');
-    console.log('Your Palm Aire Court database is ready for production!');
+  console.log('\n🎉 Database setup completed successfully!');
+  console.log('Your Palm Aire Court database is ready for production!');
     
   } catch (error) {
     console.error('\n❌ Database setup failed:');

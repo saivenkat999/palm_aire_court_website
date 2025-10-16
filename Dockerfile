@@ -2,25 +2,30 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy package files
+# Install OS dependencies required for health checks and builds
+RUN apk add --no-cache curl
+
+# Copy package manifests and Prisma schema
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install dependencies
-RUN npm ci --only=production && npm cache clean --force
+# Install dependencies (include dev deps for build step)
+RUN npm ci && npm cache clean --force
 
-# Generate Prisma client
+# Generate Prisma client ahead of the build
 RUN npx prisma generate
 
-# Copy application code
+# Copy the rest of the application code
 COPY . .
 
-# Build the application
+# Build the frontend and bundle the server
 RUN npm run build
 
+# Remove dev dependencies after build to keep the image lean
+RUN npm prune --omit=dev
+
 # Create non-root user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
+RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 
 # Change ownership of the app directory
 RUN chown -R nextjs:nodejs /app

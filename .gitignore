@@ -28,6 +28,9 @@ yarn-error.log*
 # IDE
 .vscode/
 .idea/
+.local/
+.config/
+.venv/
 
 # OS
 Thumbs.db

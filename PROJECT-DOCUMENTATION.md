@@ -8,7 +8,7 @@ Palm Aire Court is a full-stack vacation rental booking platform for a senior co
 ## Architecture
 - **Frontend**: React 18 + TypeScript, Vite
 - **Backend**: Express.js + TypeScript  
-- **Database**: PostgreSQL (Supabase)
+- **Database**: PostgreSQL (managed via Railway or any cloud provider)
 - **ORM**: Prisma
 - **UI**: TailwindCSS + shadcn/ui
 - **Routing**: Wouter
@@ -84,7 +84,6 @@ NODE_ENV="production"
 │   ├── lib/              # Server utilities
 │   └── routes/           # API endpoints
 ├── prisma/               # Database schema
-├── shared/              # Shared types
 └── assets/              # Property images
 ```
 
@@ -96,9 +95,8 @@ NODE_ENV="production"
 
 ## Production Deployment
 The application is production-ready with minimal configuration:
-- **Frontend**: Deploy to Vercel, Netlify, or CloudFront
-- **Backend**: Deploy to Railway, Render, or DigitalOcean
-- **Database**: Already hosted on Supabase (production-ready)
+- **Frontend + Backend**: Single Railway service builds the Vite frontend and serves it via Express
+- **Database**: Railway PostgreSQL (or compatible managed Postgres)
 
 ## Simplified Architecture
 - **Payments**: Direct Stripe integration without webhook complexity

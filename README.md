@@ -1,6 +1,6 @@
 # Palm Aire Court Booking System
 
-A modern, full-stack booking system for Palm Aire Court vacation rentals, built with TypeScript, React, and Supabase.
+A modern, full-stack booking system for Palm Aire Court vacation rentals, built with TypeScript, React, Prisma, and PostgreSQL.
 
 ## 🌟 Features
 
@@ -10,7 +10,7 @@ A modern, full-stack booking system for Palm Aire Court vacation rentals, built 
 - **CRM Integration**: GoHighLevel integration for customer management
 - **Real-time Availability**: Dynamic booking calendar with conflict detection
 - **Responsive Design**: Mobile-first design that works on all devices
-- **Database**: PostgreSQL with Supabase for reliable data storage
+- **Database**: PostgreSQL managed via Prisma
 
 ## 🏗️ Tech Stack
 
@@ -25,7 +25,7 @@ A modern, full-stack booking system for Palm Aire Court vacation rentals, built 
 ### Backend
 - Node.js with Express and TypeScript
 - Prisma ORM for database management
-- PostgreSQL database (Supabase)
+- PostgreSQL database
 - Stripe for payment processing
 - GoHighLevel API for CRM integration
 
@@ -34,7 +34,7 @@ A modern, full-stack booking system for Palm Aire Court vacation rentals, built 
 ### Prerequisites
 - Node.js 18+ 
 - npm or yarn
-- Supabase account
+- Railway account (or any managed PostgreSQL service)
 - Stripe account (for payments)
 - GoHighLevel account (optional, for CRM)
 
@@ -88,19 +88,20 @@ The system includes the following main entities:
 
 | Variable | Description | Required |
 |----------|-------------|----------|
+| `PORT` | Port for the web server (Railway injects automatically) | ⚠️ Optional |
+| `NODE_ENV` | Runtime environment (`development` / `production`) | ✅ |
 | `DATABASE_URL` | PostgreSQL connection string | ✅ |
-| `SUPABASE_URL` | Supabase project URL | ✅ |
-| `SUPABASE_ANON_KEY` | Supabase anonymous key | ✅ |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key | ✅ |
-| `STRIPE_SECRET_KEY` | Stripe secret key | ✅ |
-| `STRIPE_PUBLISHABLE_KEY` | Stripe publishable key | ✅ |
+| `STRIPE_SECRET_KEY` | Stripe secret key (test or live) | ✅ |
+| `STRIPE_PUBLISHABLE_KEY` | Stripe publishable key (test or live) | ✅ |
+| `SESSION_SECRET` | 64+ character random string for signing | ✅ |
 | `GHL_API_KEY` | GoHighLevel API key | ⚠️ Optional |
+| `VITE_API_URL` | Public API origin (leave empty for same-origin) | ⚠️ Optional |
 
-### Supabase Setup
+### Database Setup
 
-1. Create a new Supabase project
-2. Copy your project URL and API keys
-3. The database schema will be automatically created when you run `npx prisma db push`
+1. Provision a PostgreSQL instance (Railway add-on or another managed service)
+2. Copy the connection string into `.env`
+3. Apply schema with `npm run prisma:migrate`
 
 ### Stripe Setup
 
@@ -116,25 +117,28 @@ The system includes the following main entities:
 
 ## 🚀 Deployment
 
-The application is configured for deployment on various platforms:
+Railway is the target production platform.
 
-### Vercel (Recommended)
 ```bash
-npm run build
-vercel --prod
-```
-
-### Railway
-```bash
+# 1. Authenticate and link project
 railway login
 railway link
+
+# 2. Provision Postgres (Railway dashboard → Add New → Database → Postgres)
+
+# 3. Deploy from the CLI
 railway up
+
+# Railway uses railway.toml
+# build:  npm ci && npm run build
+# deploy: npm start
 ```
 
-### Docker
+To preview the production build locally without Railway:
+
 ```bash
-docker build -t palm-aire-court .
-docker run -p 5000:5000 palm-aire-court
+npm run build
+NODE_ENV=production npm start
 ```
 
 ## 📁 Project Structure
@@ -154,7 +158,6 @@ docker run -p 5000:5000 palm-aire-court
 │   ├── index.ts           # Server entry point
 │   └── vite.ts            # Vite development integration
 ├── prisma/                # Database schema and migrations
-├── shared/                # Shared TypeScript types
 └── assets/                # Static assets (images, etc.)
 ```
 

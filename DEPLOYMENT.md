@@ -1,196 +1,123 @@
-# 🚀 Palm Aire Court - Production Deployment Guide
+# 🚀 Palm Aire Court – Railway Production Playbook
 
-## 📋 Pre-Deployment Checklist
+Use this guide to provision, configure, deploy, and operate the Palm Aire Court application on Railway.
 
-### 1. Database Setup (CRITICAL)
-Your current SQLite database is **NOT suitable for production**. Choose one:
+---
 
-#### Option A: Supabase (Recommended - Easiest)
-1. Go to [Supabase Dashboard](https://app.supabase.com/)
-2. Create a new project or use existing: `jmablugqutnyyqbqdvub`
-3. Get your PostgreSQL connection string from Settings > Database
-4. Update `.env.production` with the connection string
+## 1. Architecture at a Glance
 
-#### Option B: Other PostgreSQL Providers
-- **Neon**: https://neon.tech/
-- **Railway**: https://railway.app/
-- **PlanetScale**: https://planetscale.com/
-- **AWS RDS**: https://aws.amazon.com/rds/
+| Concern | Railway Resource | Notes |
+| --- | --- | --- |
+| **Web/API** | Node 18 service | Runs Express API + serves Vite build from `dist/public` |
+| **Database** | PostgreSQL add-on | Minimum 1 vCPU / 1 GB RAM recommended for Prisma |
+| **Assets** | Local `/assets` served statically | Consider CDN (Railway storage, Cloudflare R2) for high traffic |
+| **Payments** | Stripe (external) | Live keys required for production |
+| **CRM** | GoHighLevel (optional) | API key captured securely in Railway variables |
 
-### 2. Environment Variables Setup
-Create production environment variables:
+---
+
+## 2. Environment Variables (copy from `.env.example`)
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `PORT` | ✅ | Railway injects automatically; keep 5000 locally |
+| `NODE_ENV` | ✅ | Set to `production` in Railway |
+| `DATABASE_URL` | ✅ | Railway Postgres connection string (`?sslmode=require`) |
+| `STRIPE_SECRET_KEY` | ✅ | Stripe live secret key |
+| `STRIPE_PUBLISHABLE_KEY` | ✅ | Stripe live publishable key |
+| `SESSION_SECRET` | ✅ | 64+ char random string (used for JWT cookies + hashing helpers) |
+| `GHL_API_KEY` | ⚠️ | Needed if CRM sync enabled |
+| `VITE_API_URL` | ⚠️ | Optional – set only if hosting frontend on separate origin |
+
+> 💡 Use Railway variable groups to separate **staging** and **production** credentials.
+
+---
+
+## 3. Build & Release Pipeline
+
+1. **Link project**
+   ```bash
+   railway login
+   railway link
+   ```
+2. **Provision Postgres** in the Railway dashboard (Add → Database → Postgres).
+3. **Set environment variables** under `Variables` tab.
+4. **Run database migrations & seed (one-time per environment)**
+   ```bash
+   railway run npm run prisma:migrate
+   railway run npm run prisma:seed
+   ```
+5. **Deploy service** – Railway automatically runs the commands from `railway.toml`:
+   ```toml
+   [build]
+   cmd = "npm ci && npm run build"
+
+   [deploy]
+   cmd = "npm start"
+   ```
+6. **Assign custom domain** (Railway dashboard → Settings → Domains) and configure DNS.
+
+---
+
+## 4. Operational Checklist
+
+### Before Go-Live
+- [ ] Stripe webhooks configured to point at `https://<domain>/api/payment-intents/webhook` (if/when implemented)
+- [ ] Admin email inbox & phone number verified in copy and metadata
+- [ ] Database backups scheduled in Railway (or external service)
+- [ ] Error monitoring (Sentry, Logtail, etc.) connected to catch runtime issues
+- [ ] Assets optimised (sizes under 1 MB) or moved to CDN for quicker loads
+
+### Smoke Tests After Deploy
+- [ ] `GET /health` returns `200` inside Railway logs
+- [ ] `GET /api/units` returns inventory list
+- [ ] Walk through booking flow (quote → hold → payment intent → booking)
+- [ ] Confirm Stripe payment shows in dashboard
+- [ ] Verify GoHighLevel contact/task created (if enabled)
+
+### Ongoing Maintenance
+- Run `npm outdated` monthly and upgrade dependencies
+- Monitor Railway metrics (CPU, memory, cold starts)
+- Rotate `SESSION_SECRET`, Stripe keys, and GoHighLevel keys every 6–12 months
+- Export Postgres backups at least weekly
+
+---
+
+## 5. Helpful Commands
 
 ```bash
-# Copy the template
-cp .env.example .env.production
+# Local development
+npm install
+npm run dev
 
-# Edit with your production values
-# DATABASE_URL - PostgreSQL connection string
-# STRIPE_SECRET_KEY - Live Stripe keys (not test)
-# STRIPE_PUBLISHABLE_KEY - Live Stripe publishable key
-# SESSION_SECRET - Generate a secure random string
-```
-
-### 3. Stripe Configuration
-1. **Switch to Live Mode** in Stripe Dashboard
-2. Get Live API keys from https://dashboard.stripe.com/apikeys
-3. Update webhook endpoints for production domain
-4. Test payment flow in live mode
-
-### 4. Database Migration & Seeding
-```bash
-# Deploy database schema
-npm run prisma:migrate
-
-# Seed with production data
-npm run prisma:seed
-```
-
-## 🌐 Deployment Options
-
-### Option 1: Vercel (Recommended)
-```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
-vercel
-
-# Set environment variables in Vercel dashboard
-```
-
-### Option 2: Railway
-```bash
-# Install Railway CLI
-npm install -g @railway/cli
-
-# Login and deploy
-railway login
-railway init
-railway up
-```
-
-### Option 3: Docker + DigitalOcean/AWS
-```bash
-# Build Docker image
-npm run docker:build
-
-# Deploy to your preferred cloud provider
-```
-
-### Option 4: Traditional VPS
-```bash
-# On your server
-git clone [your-repo]
-cd PalmAireCourt
-npm install --production
+# Production build preview
 npm run build
-npm run deploy:db
-npm start
+NODE_ENV=production npm start
+
+# Database utilities
+npm run prisma:migrate   # apply migrations
+npm run prisma:seed      # seed reference data
 ```
 
-## 🔒 Security Checklist
+---
 
-- [ ] Use HTTPS (SSL certificate)
-- [ ] Set secure SESSION_SECRET
-- [ ] Use production Stripe keys
-- [ ] Configure proper CORS
-- [ ] Set up rate limiting
-- [ ] Enable database backups
-- [ ] Configure monitoring/logging
+## 6. Incident Response Playbook
 
-## 📊 Monitoring Setup
+| Scenario | Action |
+| --- | --- |
+| Deployment fails | Inspect Railway build logs (`railway logs`) – confirm Prisma migrations succeeded |
+| API returns 500 | Check Railway service logs; enable stack traces with temporary `NODE_ENV=development` override if needed |
+| Postgres outage | Failover using Railway backup or restore from latest snapshot; update `DATABASE_URL` accordingly |
+| Stripe webhook errors | Re-deliver from Stripe dashboard after confirming endpoint healthy |
 
-### Health Check
-Your app includes a health check endpoint:
-```
-GET /health
-```
+---
 
-### Database Monitoring
-- Monitor connection pool usage
-- Set up backup schedules
-- Monitor query performance
+## 7. Future Enhancements
+- Introduce CI with GitHub Actions → trigger Railway deploys on `main`
+- Add CDN-backed object storage for user/marketing assets
+- Configure structured logging + alerting (Railway logs → Logtail/Sentry)
+- Expand automated test coverage before adding new booking logic
 
-## 🔧 Post-Deployment Tasks
+---
 
-1. **Test All Features**
-   - [ ] Unit booking flow
-   - [ ] Payment processing
-   - [ ] Email notifications
-   - [ ] Admin dashboard
-   - [ ] Photo galleries
-
-2. **Performance Optimization**
-   - [ ] Enable CDN for assets
-   - [ ] Configure caching headers
-   - [ ] Optimize images
-   - [ ] Enable gzip compression
-
-3. **SEO & Analytics**
-   - [ ] Add Google Analytics
-   - [ ] Configure meta tags
-   - [ ] Submit sitemap to Google
-   - [ ] Set up Google Business Profile
-
-## 🚨 Critical Production Issues to Address
-
-### Database Migration
-**Current**: SQLite file (`dev.db`) 
-**Required**: PostgreSQL for production
-
-### Asset Handling
-**Current**: Local assets in `/assets` folder
-**Consider**: CDN for better performance (Cloudinary, AWS S3)
-
-### Session Management
-**Current**: In-memory sessions
-**Required**: Redis/Database sessions for production
-
-### Error Handling
-**Required**: Proper error logging (Sentry, LogRocket)
-
-### Backup Strategy
-**Required**: Automated database backups
-
-## 📱 Mobile Responsiveness
-✅ Already implemented with Tailwind CSS
-
-## 🔄 CI/CD Pipeline (Optional)
-Consider setting up GitHub Actions for automated deployment:
-
-```yaml
-# .github/workflows/deploy.yml
-name: Deploy to Production
-on:
-  push:
-    branches: [main]
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - run: npm ci
-      - run: npm run build
-      - run: npm run deploy:db
-      # Deploy to your platform
-```
-
-## 🎯 Immediate Next Steps
-
-1. **Set up PostgreSQL database**
-2. **Update environment variables**
-3. **Switch Stripe to live mode**
-4. **Choose deployment platform**
-5. **Run database migrations**
-6. **Test payment flow**
-7. **Configure domain/SSL**
-
-## 📞 Support & Maintenance
-
-- Regular database backups
-- Monitor error logs
-- Update dependencies monthly
-- Security patches
-- Performance monitoring
+Keep this file up to date as infrastructure evolves so new operators can deploy with confidence.

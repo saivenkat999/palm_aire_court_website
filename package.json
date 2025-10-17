@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx server/index.ts",
-    "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
-    "start": "node dist/index.js",
+    "build": "vite build && esbuild server/production.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "start": "node dist/production.js",
     "check": "tsc",
     "docker:build": "docker build -t palm-aire-court .",
     "docker:run": "docker run -p 5000:5000 palm-aire-court"

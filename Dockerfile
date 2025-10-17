@@ -5,15 +5,11 @@ WORKDIR /app
 # Install OS dependencies required for health checks and builds
 RUN apk add --no-cache curl
 
-# Copy package manifests and Prisma schema
+# Copy package manifests
 COPY package*.json ./
-COPY prisma ./prisma/
 
 # Install dependencies (include dev deps for build step)
 RUN npm ci && npm cache clean --force
-
-# Generate Prisma client ahead of the build
-RUN npx prisma generate
 
 # Copy the rest of the application code
 COPY . .

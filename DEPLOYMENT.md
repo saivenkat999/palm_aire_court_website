@@ -1,16 +1,16 @@
 # 🚀 Palm Aire Court – Railway Production Playbook
 
-Use this guide to provision, configure, deploy, and operate the Palm Aire Court application on Railway.
+Use this guide to provision, configure, deploy, and operate the Palm Aire Court application on Railway with Supabase.
 
 ---
 
 ## 1. Architecture at a Glance
 
-| Concern | Railway Resource | Notes |
+| Concern | Resource | Notes |
 | --- | --- | --- |
-| **Web/API** | Node 18 service | Runs Express API + serves Vite build from `dist/public` |
-| **Database** | PostgreSQL add-on | Minimum 1 vCPU / 1 GB RAM recommended for Prisma |
-| **Assets** | Local `/assets` served statically | Consider CDN (Railway storage, Cloudflare R2) for high traffic |
+| **Web/API** | Railway Node 18 service | Runs Express API + serves Vite build from `dist/public` |
+| **Database** | Supabase PostgreSQL | Fully managed with auto-scaling, backups, and APIs |
+| **Assets** | Local `/assets` served statically | Consider CDN (Cloudflare R2, Supabase Storage) for high traffic |
 | **Payments** | Stripe (external) | Live keys required for production |
 | **CRM** | GoHighLevel (optional) | API key captured securely in Railway variables |
 
@@ -22,12 +22,12 @@ Use this guide to provision, configure, deploy, and operate the Palm Aire Court 
 | --- | --- | --- |
 | `PORT` | ✅ | Railway injects automatically; keep 5000 locally |
 | `NODE_ENV` | ✅ | Set to `production` in Railway |
-| `DATABASE_URL` | ✅ | Railway Postgres connection string (`?sslmode=require`) |
+| `SUPABASE_URL` | ✅ | Supabase project URL from Project Settings -> API |
+| `SUPABASE_ANON_KEY` | ✅ | Supabase anon/public key for client-side access |
 | `STRIPE_SECRET_KEY` | ✅ | Stripe live secret key |
 | `STRIPE_PUBLISHABLE_KEY` | ✅ | Stripe live publishable key |
 | `SESSION_SECRET` | ✅ | 64+ char random string (used for JWT cookies + hashing helpers) |
 | `GHL_API_KEY` | ⚠️ | Needed if CRM sync enabled |
-| `VITE_API_URL` | ⚠️ | Optional – set only if hosting frontend on separate origin |
 
 > 💡 Use Railway variable groups to separate **staging** and **production** credentials.
 
@@ -40,14 +40,14 @@ Use this guide to provision, configure, deploy, and operate the Palm Aire Court 
    railway login
    railway link
    ```
-2. **Provision Postgres** in the Railway dashboard (Add → Database → Postgres).
-3. **Set environment variables** under `Variables` tab.
-4. **Run database migrations & seed (one-time per environment)**
-   ```bash
-   railway run npm run prisma:migrate
-   railway run npm run prisma:seed
-   ```
-5. **Deploy service** – Railway automatically runs the commands from `railway.toml`:
+2. **Set up Supabase** (see SUPABASE-SETUP.md for detailed instructions)
+   - Create a Supabase project at https://app.supabase.com
+   - Set up database schema using SQL editor or migrations
+   - Get your project URL and anon key
+   
+3. **Set environment variables** under Railway's `Variables` tab (see section 2 above).
+
+4. **Deploy service** – Railway automatically runs the commands from `railway.toml`:
    ```toml
    [build]
    cmd = "npm ci && npm run build"
@@ -55,7 +55,7 @@ Use this guide to provision, configure, deploy, and operate the Palm Aire Court 
    [deploy]
    cmd = "npm start"
    ```
-6. **Assign custom domain** (Railway dashboard → Settings → Domains) and configure DNS.
+5. **Assign custom domain** (Railway dashboard → Settings → Domains) and configure DNS.
 
 ---
 
@@ -64,9 +64,10 @@ Use this guide to provision, configure, deploy, and operate the Palm Aire Court 
 ### Before Go-Live
 - [ ] Stripe webhooks configured to point at `https://<domain>/api/payment-intents/webhook` (if/when implemented)
 - [ ] Admin email inbox & phone number verified in copy and metadata
-- [ ] Database backups scheduled in Railway (or external service)
+- [ ] Supabase backups verified (automatic on all paid plans)
 - [ ] Error monitoring (Sentry, Logtail, etc.) connected to catch runtime issues
 - [ ] Assets optimised (sizes under 1 MB) or moved to CDN for quicker loads
+- [ ] Supabase Row Level Security (RLS) policies reviewed and enabled
 
 ### Smoke Tests After Deploy
 - [ ] `GET /health` returns `200` inside Railway logs
@@ -74,12 +75,13 @@ Use this guide to provision, configure, deploy, and operate the Palm Aire Court 
 - [ ] Walk through booking flow (quote → hold → payment intent → booking)
 - [ ] Confirm Stripe payment shows in dashboard
 - [ ] Verify GoHighLevel contact/task created (if enabled)
+- [ ] Check Supabase dashboard for data writes
 
 ### Ongoing Maintenance
 - Run `npm outdated` monthly and upgrade dependencies
 - Monitor Railway metrics (CPU, memory, cold starts)
 - Rotate `SESSION_SECRET`, Stripe keys, and GoHighLevel keys every 6–12 months
-- Export Postgres backups at least weekly
+- Review Supabase usage and upgrade plan if needed (free tier: 500MB DB, 2GB bandwidth)
 
 ---
 
@@ -93,10 +95,6 @@ npm run dev
 # Production build preview
 npm run build
 NODE_ENV=production npm start
-
-# Database utilities
-npm run prisma:migrate   # apply migrations
-npm run prisma:seed      # seed reference data
 ```
 
 ---
@@ -105,18 +103,20 @@ npm run prisma:seed      # seed reference data
 
 | Scenario | Action |
 | --- | --- |
-| Deployment fails | Inspect Railway build logs (`railway logs`) – confirm Prisma migrations succeeded |
-| API returns 500 | Check Railway service logs; enable stack traces with temporary `NODE_ENV=development` override if needed |
-| Postgres outage | Failover using Railway backup or restore from latest snapshot; update `DATABASE_URL` accordingly |
+| Deployment fails | Inspect Railway build logs (`railway logs`) – confirm environment variables are set correctly |
+| API returns 500 | Check Railway service logs; verify Supabase credentials are correct |
+| Supabase connection errors | Verify `SUPABASE_URL` and `SUPABASE_ANON_KEY` are correct; check Supabase project status |
 | Stripe webhook errors | Re-deliver from Stripe dashboard after confirming endpoint healthy |
 
 ---
 
 ## 7. Future Enhancements
 - Introduce CI with GitHub Actions → trigger Railway deploys on `main`
-- Add CDN-backed object storage for user/marketing assets
+- Use Supabase Storage for user/marketing assets instead of local storage
+- Enable Supabase Auth for admin panel authentication
 - Configure structured logging + alerting (Railway logs → Logtail/Sentry)
 - Expand automated test coverage before adding new booking logic
+- Consider Supabase Edge Functions for serverless background jobs
 
 ---
 

@@ -1,6 +1,6 @@
 # Palm Aire Court - Complete Project Documentation
 
-*Last Updated: August 28, 2025*
+*Last Updated: October 17, 2025*
 
 ## Project Overview
 Palm Aire Court is a full-stack vacation rental booking platform for a senior community in Phoenix, Arizona. It provides online booking for 22 units, integrated payment processing, customer management, and admin tools.
@@ -8,8 +8,7 @@ Palm Aire Court is a full-stack vacation rental booking platform for a senior co
 ## Architecture
 - **Frontend**: React 18 + TypeScript, Vite
 - **Backend**: Express.js + TypeScript  
-- **Database**: PostgreSQL (managed via Railway or any cloud provider)
-- **ORM**: Prisma
+- **Database**: Supabase (PostgreSQL with auto-generated APIs)
 - **UI**: TailwindCSS + shadcn/ui
 - **Routing**: Wouter
 - **State**: TanStack Query
@@ -64,9 +63,15 @@ Palm Aire Court is a full-stack vacation rental booking platform for a senior co
 
 ### Environment Variables
 ```env
-DATABASE_URL="postgresql://..." # Already configured
+# Supabase Configuration
+SUPABASE_URL="https://your-project.supabase.co"
+SUPABASE_ANON_KEY="your-anon-key"
+
+# Stripe Configuration
 STRIPE_SECRET_KEY="sk_live_..." # Update to live key
 STRIPE_PUBLISHABLE_KEY="pk_live_..." # Update to live key
+
+# Optional Integrations
 GHL_API_KEY="..." # GoHighLevel integration
 NODE_ENV="production"
 ```
@@ -82,21 +87,23 @@ NODE_ENV="production"
 │   │   └── types/         # TypeScript types
 ├── server/                # Express backend
 │   ├── lib/              # Server utilities
+│   │   ├── supabase.ts   # Supabase client config
+│   │   ├── static.ts     # Static file serving
+│   │   └── vite-dev.ts   # Vite dev server
 │   └── routes/           # API endpoints
-├── prisma/               # Database schema
 └── assets/              # Property images
 ```
 
 ## Setup Instructions
 1. `npm install`
-2. Configure `.env` with database and API keys
-3. `npx prisma generate && npx prisma db push && npx prisma db seed`
+2. Configure `.env` with Supabase credentials and API keys (see SUPABASE-SETUP.md)
+3. Set up Supabase database schema (see SUPABASE-SETUP.md)
 4. `npm run dev`
 
 ## Production Deployment
 The application is production-ready with minimal configuration:
 - **Frontend + Backend**: Single Railway service builds the Vite frontend and serves it via Express
-- **Database**: Railway PostgreSQL (or compatible managed Postgres)
+- **Database**: Supabase (fully managed PostgreSQL with auto-scaling)
 
 ## Simplified Architecture
 - **Payments**: Direct Stripe integration without webhook complexity

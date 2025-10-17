@@ -1,16 +1,16 @@
 # Palm Aire Court Booking System
 
-A modern, full-stack booking system for Palm Aire Court vacation rentals, built with TypeScript, React, Prisma, and PostgreSQL.
+A modern, full-stack booking system for Palm Aire Court vacation rentals, built with TypeScript, React, and Supabase.
 
 ## 🌟 Features
 
 - **Modern React Frontend**: Built with TypeScript, Vite, and Tailwind CSS
-- **Robust Backend**: Express.js API with TypeScript and Prisma ORM
+- **Robust Backend**: Express.js API with TypeScript and Supabase
 - **Secure Payments**: Stripe integration for payment processing
 - **CRM Integration**: GoHighLevel integration for customer management
 - **Real-time Availability**: Dynamic booking calendar with conflict detection
 - **Responsive Design**: Mobile-first design that works on all devices
-- **Database**: PostgreSQL managed via Prisma
+- **Database**: Supabase (PostgreSQL with auto-generated APIs)
 
 ## 🏗️ Tech Stack
 

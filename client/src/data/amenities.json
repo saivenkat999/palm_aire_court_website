@@ -56,13 +56,6 @@
     "category": "unit"
   },
   {
-    "id": "cable-tv",
-    "name": "Cable Television",
-    "description": "Basic cable TV service included",
-    "icon": "tv",
-    "category": "unit"
-  },
-  {
     "id": "ac-heat",
     "name": "Air Conditioning & Heat",
     "description": "Climate control for year-round comfort",

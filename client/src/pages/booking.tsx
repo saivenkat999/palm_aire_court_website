@@ -90,7 +90,7 @@ export default function BookingPage() {
   // Determine if this is a pool booking (unitType provided) or specific unit booking
   const isPoolBooking = !!unitType && !unitId;
   const displayName = isPoolBooking ? 
-    (unitType === 'TRAILER' ? 'Any Available Trailer' :
+    (unitType === 'TRAILER' ? 'Any Available Unit' :
      unitType === 'COTTAGE_1BR' ? 'Any Available 1-Bedroom Cottage' :
      unitType === 'COTTAGE_2BR' ? 'Any Available 2-Bedroom Cottage' :
      unitType === 'RV_SITE' ? 'Any Available RV Site' : 'Any Available Unit') : 

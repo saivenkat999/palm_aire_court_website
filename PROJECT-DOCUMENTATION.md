@@ -1,43 +1,50 @@
 # Palm Aire Court - Complete Project Documentation
 
-*Last Updated: October 17, 2025*
+*Last Updated: October 19, 2025*
 
 ## Project Overview
-Palm Aire Court is a full-stack vacation rental booking platform for a senior community in Phoenix, Arizona. It provides online booking for 22 units, integrated payment processing, customer management, and admin tools.
+Palm Aire Court is a full-stack vacation rental booking platform for a senior community in Phoenix, Arizona. It provides online booking for **17 units** (2 two-bedroom cottages, 4 one-bedroom cottages, and 11 standard units), integrated payment processing, customer management, and admin tools.
 
 ## Architecture
 - **Frontend**: React 18 + TypeScript, Vite
 - **Backend**: Express.js + TypeScript  
-- **Database**: Supabase (PostgreSQL with auto-generated APIs)
-- **UI**: TailwindCSS + shadcn/ui
-- **Routing**: Wouter
-- **State**: TanStack Query
-- **Payments**: Stripe (direct integration, no webhooks)
-- **CRM**: GoHighLevel
-- **Validation**: Zod
+- **Database**: Supabase (PostgreSQL with Row Level Security)
+- **UI**: TailwindCSS + shadcn/ui components
+- **Routing**: Wouter (lightweight React router)
+- **State**: TanStack Query (React Query v5)
+- **Payments**: Stripe (direct integration)
+- **CRM**: GoHighLevel integration
+- **Validation**: Zod schemas
 
 ## Database Schema
-- **Units**: 22 accommodations with photos, pricing, amenities
-- **RatePlans**: Seasonal pricing for each unit
-- **Bookings**: Customer reservations with payment tracking
-- **Customers**: Guest information and contact details
-- **Payments**: Stripe payment records
-- **Holds**: Temporary reservations to prevent double booking
-- **Seasons**: Pricing periods (High, Low, Peak seasons)
-- **Fees**: Additional charges (cleaning, taxes, etc.)
+All tables use **snake_case** column naming for PostgreSQL best practices.
+
+- **units**: 17 rental properties (TEXT id, slug, name, type, capacity, beds, baths, amenities, features, photos, active, created_at, updated_at)
+- **rate_plans**: Pricing tiers (unit_id FK, category, nightly, weekly, monthly, four_month in cents, currency)
+- **bookings**: Reservations (unit_id FK, customer_id FK, check_in, check_out, status, total_cents, currency, notes)
+- **customers**: Guest info (first_name, last_name, email, phone)
+- **payments**: Stripe records (booking_id FK, provider, stripe_intent_id, amount_cents, currency, status)
+- **holds**: Temporary reservations (unit_id FK, check_in, check_out, expires_at, status - prevents double-booking)
+- **seasons**: Pricing periods (name, start_date, end_date, discount_pct)
+- **fees**: Additional charges (name, amount, per_stay boolean)
+
+**ENUM Types:**
+- `UnitType`: TRAILER, COTTAGE_1BR, COTTAGE_2BR, RV_SITE
+- `HoldStatus`: ACTIVE, EXPIRED, CONVERTED, CANCELLED
+- `BookingStatus`: CONFIRMED, CANCELLED
 
 ## Key Features
-- ✅ 22 units (12 cottages, 10 trailers) with real property photos
+- ✅ 17 units with real property photos
 - ✅ Complete booking system with date selection and dynamic pricing
-- ✅ Stripe payment processing (direct, no webhook dependencies)
+- ✅ Stripe payment processing (Payment Intents API, no webhooks)
 - ✅ Customer management and GoHighLevel CRM integration
-- ✅ Real-time availability checking with hold system
+- ✅ Real-time availability checking with 10-minute hold system
 - ✅ Dynamic pricing with seasonal rates and additional fees
 - ✅ Responsive design working on all devices
-- ✅ Interactive Google Maps on homepage, contact, and all unit pages
-- ✅ Professional UI with real images (no placeholders)
-- ✅ Updated cancellation policies across all pages
-- ✅ Live database integration (no static JSON dependencies)
+- ✅ Interactive Google Maps integration
+- ✅ Professional UI with shadcn/ui components
+- ✅ Updated terminology: "Units" instead of "Trailers"
+- ✅ Live Supabase database (no static JSON dependencies)
 
 ## API Endpoints
 - `/api/units` - Unit management and listing

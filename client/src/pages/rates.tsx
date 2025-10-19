@@ -17,7 +17,7 @@ export default function Rates() {
   }, []);
 
   const categoryLabels: Record<string, string> = {
-    'TRAILER': 'Trailers',
+    'TRAILER': 'Units',
     'COTTAGE_1BR': '1-Bedroom Cottages', 
     'COTTAGE_2BR': '2-Bedroom Cottages',
     'RV_SITE': 'RV Sites',

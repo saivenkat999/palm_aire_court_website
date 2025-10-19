@@ -98,7 +98,7 @@ export default function FeaturedStays() {
                     <p className="text-muted-foreground" data-testid={`unit-type-${unit.slug}`}>
                       {unit.type === 'COTTAGE_1BR' ? '1 Bedroom Cottage' :
                        unit.type === 'COTTAGE_2BR' ? '2 Bedroom Cottage' :
-                       unit.type === 'TRAILER' ? '5th Wheel Trailer' :
+                       unit.type === 'TRAILER' ? 'Standard Unit' :
                        unit.type === 'RV_SITE' ? 'RV Site' : unit.type}
                     </p>
                   </div>

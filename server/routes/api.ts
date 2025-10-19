@@ -60,7 +60,15 @@ router.get('/units', async (req, res) => {
       .select('*')
       .order('name', { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error fetching units:', error);
+      // If table doesn't exist, return empty array instead of error
+      if (error.code === 'PGRST116' || error.message?.includes('does not exist')) {
+        console.warn('Units table does not exist. Please run the database schema setup.');
+        return res.json([]);
+      }
+      throw error;
+    }
 
     const { data: categoryRatePlans } = await supabase
       .from('rate_plans')
@@ -106,9 +114,14 @@ router.get('/units', async (req, res) => {
     );
 
     res.json(unitsWithDetails);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching units:', error);
-    res.status(500).json({ error: 'Failed to fetch units' });
+    console.error('Error details:', JSON.stringify(error, null, 2));
+    res.status(500).json({ 
+      error: 'Failed to fetch units',
+      message: error.message,
+      hint: error.hint || 'Please check if database tables are set up correctly'
+    });
   }
 });
 

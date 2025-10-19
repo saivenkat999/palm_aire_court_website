@@ -200,7 +200,7 @@ export default function Stays() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="TRAILER">Trailers</SelectItem>
+                  <SelectItem value="TRAILER">Units</SelectItem>
                   <SelectItem value="COTTAGE_1BR">Cottages 1BR</SelectItem>
                   <SelectItem value="COTTAGE_2BR">Cottages 2BR</SelectItem>
                   <SelectItem value="RV_SITE">RV Sites</SelectItem>
@@ -299,7 +299,7 @@ export default function Stays() {
                     <h3 className="font-semibold text-lg mb-2">
                       {group.type === 'COTTAGE_1BR' ? '1-Bedroom Cottages' :
                        group.type === 'COTTAGE_2BR' ? '2-Bedroom Cottages' :
-                       group.type === 'TRAILER' ? 'Trailers' :
+                       group.type === 'TRAILER' ? 'Units' :
                        group.type === 'RV_SITE' ? 'RV Sites' : group.type}
                     </h3>
                     <p className="text-muted-foreground mb-4">

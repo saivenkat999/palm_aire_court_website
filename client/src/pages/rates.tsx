@@ -113,24 +113,24 @@ export default function Rates() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-4">
               <div>
-                <h4 className="font-semibold mb-2">Spring & Fall Special</h4>
+                <h4 className="font-semibold mb-2">Off Season Discount</h4>
                 <p className="text-muted-foreground mb-2">
-                  <strong>November & April:</strong> 10% off nightly rates
+                  <strong>April through November:</strong> 10% off nightly rates
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Perfect weather months with comfortable temperatures and lower crowds.
+                  Enjoy comfortable weather and great savings during our off-season months.
                 </p>
               </div>
               
               <div>
-                <h4 className="font-semibold mb-2">Summer Saver</h4>
+                <h4 className="font-semibold mb-2">Peak Season</h4>
                 <p className="text-muted-foreground mb-2">
-                  <strong>May through October:</strong> 20% off nightly rates
+                  <strong>December through March:</strong> Regular rates
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Beat the heat with our biggest discounts during the warmer months.
+                  Premium winter season with ideal weather and full amenities.
                 </p>
               </div>
             </div>

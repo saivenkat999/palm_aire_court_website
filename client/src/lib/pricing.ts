@@ -55,11 +55,10 @@ export function getSeasonalDiscount(checkIn: Date, checkOut: Date): number {
   let maxDiscount = 0;
   
   for (const month of months) {
-    if (month === 10 || month === 3) { // November (10) or April (3) - 10% discount
+    if (month >= 3 && month <= 10) { // April-November (3-10) - 10% discount (Off Season)
       maxDiscount = Math.max(maxDiscount, 10);
-    } else if (month >= 4 && month <= 9) { // May-October (4-9) - 20% discount
-      maxDiscount = Math.max(maxDiscount, 20);
     }
+    // December-March (11, 0, 1, 2) - 0% discount (Peak Season)
   }
   
   return maxDiscount;
